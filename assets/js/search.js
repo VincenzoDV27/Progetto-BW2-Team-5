@@ -62,17 +62,19 @@ searchButton.addEventListener('click', async (e) => {
 
 });
 
+ let timerRicerca;
 inputUser.addEventListener('input', () => {
-    
+     clearTimeout(timerRicerca);
 
     const query = inputUser.value.trim();
+
     if (query === '') {
         return;
     }
 
-     setTimeout(() => {
+   timerRicerca = setTimeout(() => {
         searchAll(query);
-    }, debounce);
+    }, 400);
 });
 
 
