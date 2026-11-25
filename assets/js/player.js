@@ -33,7 +33,7 @@ export function updatePlayer(track) {
 
 /* AGGIORNAMENTO ICONA PLAY/PAUSA */
 function updatePlayIcon() {
-    playIcon.textContent = player.isPlaying ? 'pause' : 'play_arrow';
+    playIcon.textContent = player.audio.paused ? 'play_arrow' : 'pause';
 }
 
 /* PLAY E PAUSA */

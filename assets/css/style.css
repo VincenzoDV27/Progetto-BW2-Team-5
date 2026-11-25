@@ -486,3 +486,125 @@ main {
     outline: none !important;
     box-shadow: none !important;
 }
+
+/* PAGINA ALBUM */
+
+.album-page {
+    padding: 20px 15px 120px;
+}
+
+/* COPERTINA */
+
+.album-image {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* HERO */
+
+.album-hero {
+    align-items: center;
+    gap: 20px;
+}
+
+/* INFORMAZIONI */
+
+.hero-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.album-label {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.album-title {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.album-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    color: #b3b3b3;
+    font-size: 14px;
+}
+
+/* TRACKLIST ALBUM */
+
+.tracklist {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.track-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.track-row:hover {
+    background-color: #292929;
+}
+
+.track-number {
+    width: 20px;
+    color: #b3b3b3;
+    text-align: center;
+}
+
+.track-title {
+    flex: 1;
+    color: #fff;
+    font-weight: 600;
+}
+
+.track-duration {
+    color: #b3b3b3;
+    font-size: 14px;
+}
+
+/* PULSANTE PREFERITI TRACKLIST */
+
+.track-row .btnPref,
+.track-row .btnPrefActive {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 8px;
+}
+
+.track-row .btnPref {
+    color: #fff;
+}
+
+.track-row .btnPrefActive {
+    color: #f1c40f;
+}
+
+.track-row .btnPref,
+.track-row .btnPrefActive {
+    position: static;
+    width: auto;
+    height: auto;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 8px;
+}
+
+/* END ALBUM */

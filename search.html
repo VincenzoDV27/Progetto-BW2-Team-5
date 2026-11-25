@@ -114,80 +114,79 @@
                 </section>
 
             </main>
+        </div>
+        <!-- PLAYER/FOOTER -->
+        <footer class="player flex-shrink-0 d-flex align-items-center">
 
-            <!-- PLAYER/FOOTER -->
-            <footer class="player flex-shrink-0 d-flex align-items-center">
+            <div class="row align-items-center w-100 g-0">
 
-                <div class="row align-items-center w-100 g-0">
-
-                    <!-- BRANO SELEZIONATO -->
-                    <div class="player-track col-4 col-md-4 d-flex align-items-center gap-2">
-                        <div class="player-cover">
-                            <img src="https://placehold.co/112x112/000000/000000" alt="Copertina brano"
-                                class="img-fluid">
-                        </div>
-
-                        <div class="player-meta">
-                            <p class="player-title">Seleziona un brano</p>
-                            <p class="player-artist">-</p>
-                        </div>
+                <!-- BRANO SELEZIONATO -->
+                <div class="player-track col-4 col-md-4 d-flex align-items-center gap-2">
+                    <div class="player-cover">
+                        <img src="https://placehold.co/112x112/000000/000000" alt="Copertina brano" class="img-fluid">
                     </div>
 
-                    <!-- PLAYER CENTRALE -->
-                    <div class="player-center col-4 col-md-4 d-flex flex-column align-items-center">
+                    <div class="player-meta">
+                        <p class="player-title">Seleziona un brano</p>
+                        <p class="player-artist">-</p>
+                    </div>
+                </div>
 
-                        <div class="player-controls d-flex align-items-center justify-content-center gap-1 gap-md-3">
+                <!-- PLAYER CENTRALE -->
+                <div class="player-center col-4 col-md-4 d-flex flex-column align-items-center">
 
-                            <button class="btn-ctrl" type="button">
-                                <span class="material-symbols-rounded">shuffle</span>
-                            </button>
+                    <div class="player-controls d-flex align-items-center justify-content-center gap-1 gap-md-3">
 
-                            <button class="btn-ctrl" type="button">
-                                <span class="material-symbols-rounded">skip_previous</span>
-                            </button>
+                        <button class="btn-ctrl" type="button">
+                            <span class="material-symbols-rounded">shuffle</span>
+                        </button>
 
-                            <button class="btn-play" type="button">
-                                <span class="material-symbols-rounded">play_arrow</span>
-                            </button>
+                        <button class="btn-ctrl" type="button">
+                            <span class="material-symbols-rounded">skip_previous</span>
+                        </button>
 
-                            <button class="btn-ctrl" type="button">
-                                <span class="material-symbols-rounded">skip_next</span>
-                            </button>
+                        <button class="btn-play" type="button">
+                            <span class="material-symbols-rounded">play_arrow</span>
+                        </button>
 
-                            <button class="btn-ctrl" type="button">
-                                <span class="material-symbols-rounded">repeat</span>
-                            </button>
+                        <button class="btn-ctrl" type="button">
+                            <span class="material-symbols-rounded">skip_next</span>
+                        </button>
 
-                        </div>
-
-                        <!-- BARRA AVANZAMENTO BRANO -->
-                        <div class="player-progress d-flex align-items-center gap-2">
-                            <span class="current-time">0:00</span>
-
-                            <div class="progress-bar">
-                                <div class="progress-fill"></div>
-                            </div>
-
-                            <span class="duration">0:00</span>
-                        </div>
+                        <button class="btn-ctrl" type="button">
+                            <span class="material-symbols-rounded">repeat</span>
+                        </button>
 
                     </div>
 
-                    <!-- VOLUME -->
-                    <div class="player-right col-4 col-md-4 d-flex align-items-center justify-content-end">
+                    <!-- BARRA AVANZAMENTO BRANO -->
+                    <div class="player-progress d-flex align-items-center gap-2">
+                        <span class="current-time">0:00</span>
 
-                        <div class="dropup">
-                            <button class="btn-ctrl" type="button" data-bs-toggle="dropdown" data-bs-display="static"
-                                aria-expanded="false">
-                                <span class="material-symbols-rounded">volume_up</span>
-                            </button>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
 
-                            <div class="dropdown-menu">
-                                <input type="range" class="form-range volume-control" min="0" max="100" value="75">
-                            </div>
+                        <span class="duration">0:00</span>
+                    </div>
+
+                </div>
+
+                <!-- VOLUME -->
+                <div class="player-right col-4 col-md-4 d-flex align-items-center justify-content-end">
+
+                    <div class="dropup">
+                        <button class="btn-ctrl" type="button" data-bs-toggle="dropdown" data-bs-display="static"
+                            aria-expanded="false">
+                            <span class="material-symbols-rounded">volume_up</span>
+                        </button>
+
+                        <div class="dropdown-menu">
+                            <input type="range" class="form-range volume-control" min="0" max="100" value="30">
                         </div>
                     </div>
                 </div>
-            </footer>
-        </div>
+            </div>
+        </footer>
+
 </body>

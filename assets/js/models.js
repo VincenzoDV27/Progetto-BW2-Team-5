@@ -14,7 +14,7 @@ export class Track {
   }
 }
 
-// classe album -> 
+// classe album ->
 
 export class Album {
   constructor(data) {
@@ -24,6 +24,7 @@ export class Album {
     this.primaryGenreName = data.primaryGenreName;
     this.artistId = data.artistId;
     this.artworkUrl100 = data.artworkUrl100;
+    this.releaseDate = data.releaseDate;
   }
 }
 
@@ -36,7 +37,6 @@ export class Artist {
 }
 
 // non vengono passate proprietà all'interno del constructor perché non si sa in origine quale canzone verrà riprodotta
-
 
 export class Player {
   constructor() {
@@ -63,7 +63,8 @@ export class Player {
 
     this.audio.src = this.currentTrack.previewUrl;
 
-    this.audio.play()
+    this.audio
+      .play()
       .then(() => {
         this.isPlaying = true;
 
