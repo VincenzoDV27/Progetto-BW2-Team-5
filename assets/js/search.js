@@ -1,7 +1,8 @@
 import { fetchJSON } from "./api.js";
 import { Track, Album, Artist, Player } from "./models.js";
 import { myPreferit, renderCard } from "./cards.js";
-import { player, updatePlayer } from "./player.js";
+import { player, updatePlayer, addToHistory } from "./player.js";
+import { renderAsideFavs } from "./cards.js";
 
 const API_BASE = "https://itunes.apple.com";
 const inputUser = document.querySelector("#search-input");
@@ -9,10 +10,14 @@ const searchButton = document.querySelector("#search-button");
 const gridTracks = document.querySelector("#grid-tracks");
 const gridAlbums = document.querySelector("#grid-albums");
 const gridArtists = document.querySelector("#grid-artists");
+const searchSpinner = document.querySelectorAll(".search-spinner");
+const mySections = document.querySelectorAll(".mysection");
+const setLoading = (on) =>
+  searchSpinner.forEach((s) => s.classList.toggle("d-none", !on));
 
 //array per i brani della ricerca
 let tracksFound = [];
-
+renderAsideFavs();
 /* ricerca generica, entity = canzone o album o artista */
 const search = async (term, entity, limit) => {
   const url = `${API_BASE}/search?term=${encodeURIComponent(term)}&entity=${entity}&limit=${limit}`;
@@ -58,49 +63,43 @@ if (searchButton && inputUser) {
 
     const query = inputUser.value.trim();
 
-    if (!query) return;
-
+    if (!query) {
+      clearSearch();
+      return;
+    }
     timerSearch = setTimeout(() => {
       searchAll(query);
     }, 400);
   });
 }
 
-export function debounce(fn, delay = 400) {
-  let timer;
-  const debounced = (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  };
-  debounced.cancel = () => clearTimeout(timer);
-  return debounced;
-}
-
 const searchAll = async (term) => {
-  const [tracks, albums, artists] = await Promise.allSettled([
-    searchTracks(term),
-    searchAlbums(term),
-    searchArtists(term),
-  ]);
+  mySections.forEach((spinner) => (spinner.hidden = false));
+  setLoading(true);
+  try {
+    const [tracks, albums, artists] = await Promise.allSettled([
+      searchTracks(term),
+      searchAlbums(term),
+      searchArtists(term),
+    ]);
 
-  const arrayTrack = tracks.status === "fulfilled" ? tracks.value : [];
-  const arrayAlbum = albums.status === "fulfilled" ? albums.value : [];
-  const arrayArtist = artists.status === "fulfilled" ? artists.value : [];
+    const arrayTrack = tracks.status === "fulfilled" ? tracks.value : [];
+    const arrayAlbum = albums.status === "fulfilled" ? albums.value : [];
+    const arrayArtist = artists.status === "fulfilled" ? artists.value : [];
 
-  //salvo i brani
-  tracksFound = arrayTrack;
+    //salvo i brani
+    tracksFound = arrayTrack;
 
-  gridTracks.hidden = arrayTrack.length === 0;
-  gridAlbums.hidden = arrayAlbum.length === 0;
-  gridArtists.hidden = arrayArtist.length === 0;
+    gridTracks.closest("section").hidden = arrayTrack.length === 0;
+    gridAlbums.closest("section").hidden = arrayAlbum.length === 0;
+    gridArtists.closest("section").hidden = arrayArtist.length === 0;
 
-  gridTracks.closest("section").hidden = arrayTrack.length === 0;
-  gridAlbums.closest("section").hidden = arrayAlbum.length === 0;
-  gridArtists.closest("section").hidden = arrayArtist.length === 0;
-
-  renderCard(arrayTrack, gridTracks);
-  renderCard(arrayAlbum, gridAlbums);
-  renderCard(arrayArtist, gridArtists);
+    renderCard(arrayTrack, gridTracks);
+    renderCard(arrayAlbum, gridAlbums);
+    renderCard(arrayArtist, gridArtists);
+  } finally {
+    setLoading(false);
+  }
 };
 
 // EVENT DELEGATION sula griglia dei brani
@@ -120,10 +119,25 @@ gridTracks.addEventListener(`click`, (e) => {
   const track = tracksFound.find((item) => item.trackId === cardSelectedId);
 
   if (!track) return;
-
+  addToHistory(track);
   // SELEZIONO IL BRANO
   player.select(track);
 
   // AGGIORNO IL PLAYER
   updatePlayer(track);
 });
+
+function clearSearch() {
+  clearTimeout(timerSearch); // annulla una ricerca che stava per partire
+  setLoading(false);
+
+  // svuoto le griglie
+  gridTracks.textContent = "";
+  gridAlbums.textContent = "";
+  gridArtists.textContent = "";
+
+  // nascondo le sezioni
+  gridTracks.closest("section").hidden = true;
+  gridAlbums.closest("section").hidden = true;
+  gridArtists.closest("section").hidden = true;
+}

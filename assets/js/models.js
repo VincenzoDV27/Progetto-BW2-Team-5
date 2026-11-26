@@ -46,18 +46,41 @@ export class Player {
     this.audio = new Audio();
     this.history = [];
 
+    // CODA DI RIPRODUZIONE
+    this.queue = [];
+    this.currentIndex = -1;
+
+    // PASSA AUTOMATICAMENTE AL BRANO SUCCESSIVO
     this.audio.addEventListener("ended", () => {
-      this.isPlaying = false;
+      this.next();
     });
   }
 
+  // IMPOSTA UNA CODA DI RIPRODUZIONE
+  setQueue(tracks, index = 0) {
+    this.queue = tracks;
+    this.currentIndex = index;
+
+    this.select(this.queue[index]);
+  }
+
+  // SELEZIONA UN BRANO
   select(track) {
     this.currentTrack = track;
     this.isPlaying = false;
     this.audio.pause();
     this.audio.currentTime = 0;
+
+    const index = this.queue.findIndex(
+      (item) => item.trackId === track.trackId,
+    );
+
+    if (index !== -1) {
+      this.currentIndex = index;
+    }
   }
 
+  // RIPRODUCE IL BRANO
   play() {
     if (!this.currentTrack || !this.currentTrack.previewUrl) return;
 
@@ -67,12 +90,6 @@ export class Player {
       .play()
       .then(() => {
         this.isPlaying = true;
-
-        const lastTrack = this.history[this.history.length - 1];
-
-        if (lastTrack?.trackId !== this.currentTrack.trackId) {
-          this.history.push(this.currentTrack);
-        }
       })
       .catch((error) => {
         this.isPlaying = false;
@@ -80,16 +97,40 @@ export class Player {
       });
   }
 
+  // METTE IN PAUSA
   pause() {
     this.isPlaying = false;
     this.audio.pause();
   }
 
+  // BRANO SUCCESSIVO
+  next() {
+    if (this.currentIndex < 0) return;
+    if (this.currentIndex >= this.queue.length - 1) {
+      this.pause();
+      return;
+    }
+
+    this.select(this.queue[this.currentIndex + 1]);
+    this.play();
+  }
+
+  // BRANO PRECEDENTE
+  previous() {
+    if (this.currentIndex <= 0) return;
+
+    this.select(this.queue[this.currentIndex - 1]);
+    this.play();
+  }
+
+  // GESTIONE VOLUME
   manageVolume(volume) {
     const safeVolume = Math.min(1, Math.max(0, volume));
     this.volume = safeVolume;
     this.audio.volume = safeVolume;
   }
+
+  // AVANZAMENTO BRANO
   seek(seconds) {
     if (!this.currentTrack) return;
     this.audio.currentTime = seconds;

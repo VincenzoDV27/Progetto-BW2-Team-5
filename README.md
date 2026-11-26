@@ -48,14 +48,15 @@ Progetto didattico che riproduce l'esperienza di una piattaforma di streaming mu
 - [x] Controllo volume.
 - [x] Ricerca con debounce e risultati divisi in brani, album e artisti.
 - [x] Pagina Album: copertina, info, tracklist e link all'artista.
+- [x] Pagina Artista: info e top track.
 - [x] Sistema dei preferiti salvato in LocalStorage.
+- [x] "I brani che ti piacciono" raccolti in un unico array.
+- [x] Cronologia dei brani riprodotti.
 - [x] Home: recenti, preferiti e suggerimenti per genere.
 - [x] Layout responsive e pubblicazione su GitHub Pages.
 
 ### Da completare
 
-- [ ] Pagina Artista: info e top track.
-- [ ] Cronologia dei brani riprodotti.
 - [ ] Salvataggio dell'ultima ricerca.
 - [ ] Gestione errori: input vuoto, nessun risultato, pulsante "riprova".
 - [ ] Test dei casi limite: input vuoto, reload della pagina, mobile.
@@ -64,7 +65,6 @@ Progetto didattico che riproduce l'esperienza di una piattaforma di streaming mu
 
 - [ ] Filtri artista / album / brano nella ricerca.
 - [ ] Modale a tutto schermo al click della card.
-- [ ] "I brani che ti piacciono" raccolti in un unico array.
 - [ ] Sezione "Album che ti piacciono".
 
 ---
@@ -76,7 +76,7 @@ Il progetto usa gli ES Modules (`<script type="module">`), quindi **non funziona
 1. Clona la repository:
 
 ```bash
-git clone <https://github.com/VincenzoDV27/Progetto-BW2-Team-5>
+git clone https://github.com/VincenzoDV27/Progetto-BW2-Team-5.git
 ```
 
 2. Apri la cartella con VS Code.
@@ -170,7 +170,7 @@ Tutte le pagine condividono lo stesso contenitore `app`:
 - Tracklist dei brani.
 - Collegamento alla pagina dell'artista.
 
-#### 🎤 [Artista](artist.html) — _in sviluppo_
+#### 🎤 [Artista](artist.html)
 
 ```html
 <section class="artist-page">
@@ -231,6 +231,10 @@ La logica è organizzata in moduli ES, che esportano e importano le funzioni tra
 
 - Correzione di bug e sistemazione delle funzionalità.
 
+### v4.1
+
+- Implementazione della pagina Artista con informazioni e top 15 brani; riproduzione di album e artisti tramite coda musicale; aggiunta dei controlli per brano precedente e successivo, con passaggio automatico alla traccia seguente; introduzione della cronologia dei brani con salvataggio in LocalStorage e visualizzazione nella Home; aggiornamento della gestione del player e delle card musicali.
+
 ---
 
 ## 📅 Diario di sviluppo
@@ -254,5 +258,12 @@ La logica è organizzata in moduli ES, che esportano e importano le funzioni tra
 
 - Ricerca con debounce di 400 ms.
 - Card di brani, album e artisti con `createElement` ed event delegation.
-- Pagina Album completa.
+- Pagine Album e Artista complete.
 - Player con barra di avanzamento e volume.
+
+### Giorno 3 · Giovedì 26 — LocalStorage, Home e chiusura lavori
+
+- Preferiti salvati in LocalStorage e raccolti nell'array "I brani che ti piacciono".
+- Cronologia dei brani riprodotti.
+- Home con recenti, preferiti e generi.
+- Layout responsive e pubblicazione su GitHub Pages.

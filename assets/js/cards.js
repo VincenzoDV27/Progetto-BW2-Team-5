@@ -1,5 +1,4 @@
-export const myPreferit = [];
-export const myPreferitSearch = [];
+export const myPreferit = JSON.parse(localStorage.getItem("myPreferit")) ?? [];
 export const gridFavorites = document.querySelector("#grid-favorites");
 export function create(tag, classes, texts) {
   const element = document.createElement(tag);
@@ -9,6 +8,7 @@ export function create(tag, classes, texts) {
 }
 
 export function renderCard(array, containerPadre) {
+  if (!containerPadre) return;
   containerPadre.textContent = "";
   array.forEach((item) => {
     const titleText = item.trackName ?? item.collectionName ?? "";
@@ -16,7 +16,10 @@ export function renderCard(array, containerPadre) {
 
     //DIV CONTENENTE TUTTA LA CARD
     const myDivCard = create("div", "card-personal"); //AGGIUNGERE CLASSI IL CONTENUTO E' L IMG
-    myDivCard.dataset.id = item.trackId ?? item.collectionId;
+    myDivCard.dataset.id = item.trackId ?? item.collectionId ?? item.artistId;
+    if (item.artistId && !item.trackId && !item.collectionId) {
+      myDivCard.classList.add("artist-card");
+    }
     if (item.collectionId && !item.trackId) {
       //COLLEGAMENTO ALLA PAGINA ALBUM
       myDivCard.classList.add("album-card");
@@ -25,7 +28,6 @@ export function renderCard(array, containerPadre) {
     const myDivImg = create("div", "myDivImg"); //AGGIUNGERE CLASSI E CONTENUTO
     // myDivImg.classList.add('')
     const myImg = create("img"); //AGGIUNGERE CLASSI E CONTENUTO
-    // myImg.src = `${item.artworkUrl100}`
     myImg.src = imgClean(item.artworkUrl100, 600);
 
     // APPEND DELL IMG AL DIV
@@ -56,23 +58,14 @@ export function renderCard(array, containerPadre) {
     );
 
     btnPref.addEventListener("click", (e) => {
+      if (!containerPadre) return;
       e.preventDefault();
       const index = myPreferit.findIndex(
         (element) => (element.trackId ?? element.collectionId) === id,
       );
 
-      /* >>>>>>>>>> MODIFICATO: L'ICONA SI AGGIORNA DOPO, SU TUTTE LE COPIE */
-      if (index !== -1) {
-        myPreferit.splice(index, 1);
-        myPreferitSearch.splice(index, 1);
-      } else {
-        const currentPage = window.location.pathname;
-        if (currentPage.endsWith("index.html")) {
-          myPreferit.push(item);
-        } else if (currentPage.endsWith("search.html")) {
-          myPreferitSearch.push(item);
-        }
-      }
+      /* L'ICONA SI AGGIORNA DOPO, SU TUTTE LE COPIE */
+      index !== -1 ? myPreferit.splice(index, 1) : myPreferit.push(item);
       savePreferit();
 
       const newIcon = index !== -1 ? "☆" : "★"; // se c'era l'abbiamo tolto, se non c'era l'abbiamo messo
@@ -85,8 +78,8 @@ export function renderCard(array, containerPadre) {
         button.classList.toggle("btnPref", index !== -1);
       });
 
-      console.log(myPreferit);
       renderCard(myPreferit, gridFavorites);
+      renderAsideFavs();
     });
 
     myDivTitle.append(mytitle, myArtist, btnPref);
@@ -101,16 +94,46 @@ export function renderCard(array, containerPadre) {
       });
     }
 
+    /* APERTURA PAGINA ARTISTA */
+    if (item.artistId && !item.trackId && !item.collectionId) {
+      myDivCard.addEventListener("click", (e) => {
+        if (e.target.closest(".btnPref, .btnPrefActive")) return;
+
+        window.location.href = `artist.html?id=${item.artistId}`;
+      });
+    }
+
     containerPadre.append(myDivCard);
   });
 }
 
 export function savePreferit() {
   localStorage.setItem("myPreferit", JSON.stringify(myPreferit));
-  localStorage.setItem("myPreferitSearch", JSON.stringify(myPreferitSearch));
+  renderAsideFavs();
 }
 
 export function imgClean(url, size = 600) {
   if (!url) return "";
   return url.replace(/\d+x\d+bb/, `${size}x${size}bb`);
+}
+
+export function renderAsideFavs() {
+  //intercetto la lista
+  const sideFavs = document.querySelector(`#sidebar-favs`);
+
+  //svuoto la lista
+  sideFavs.textContent = "";
+
+  if (myPreferit.length === 0) {
+    const listFavs = create("li", "list-favs fst-italic", "Ancora nessuno");
+    sideFavs.append(listFavs);
+    return;
+  }
+
+  myPreferit.forEach((item) => {
+    const listFavs = create("li", "list-favs fst-italic with-hover");
+    const title = item.trackName;
+    listFavs.textContent = title;
+    sideFavs.append(listFavs);
+  });
 }

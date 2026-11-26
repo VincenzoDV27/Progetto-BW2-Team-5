@@ -2,6 +2,9 @@ import { getAlbum } from "./api.js";
 import { player, updatePlayer } from "./player.js";
 import { myPreferit, savePreferit } from "./cards.js";
 
+// PULSANTE GIALLO RIPRODUZIONE ALBUM
+const albumActions = document.querySelector("#album-actions");
+
 /* RECUPERO PREFERITI DAL LOCALSTORAGE */
 const loadPref = JSON.parse(localStorage.getItem("myPreferit")) ?? [];
 
@@ -90,6 +93,32 @@ const renderAlbum = (album, tracks) => {
   // INSERIMENTO NEL DOM
   albumCover.append(img);
   heroMeta.append(label, title, metadata);
+
+  // CREAZIONE PULSANTE PLAY
+  const playButton = document.createElement("button");
+  const playIcon = document.createElement("span");
+
+  playButton.className = "btn-album-play";
+  playButton.type = "button";
+
+  playIcon.className = "material-symbols-rounded";
+  playIcon.textContent = "play_arrow";
+
+  playButton.append(playIcon);
+  albumActions.append(playButton);
+
+  // RIPRODUZIONE INTERO ALBUM
+  playButton.addEventListener("click", () => {
+    const firstTrack = tracks.find((track) => track.previewUrl);
+
+    if (!firstTrack) return;
+
+    const firstIndex = tracks.indexOf(firstTrack);
+
+    player.setQueue(tracks, firstIndex);
+    updatePlayer(firstTrack);
+    player.play();
+  });
 };
 
 /* GENERAZIONE TRACKLIST */
@@ -164,7 +193,7 @@ const renderTracklist = (tracks) => {
     row.addEventListener("click", () => {
       if (!track.previewUrl) return;
 
-      player.select(track);
+      player.setQueue(tracks, index);
       updatePlayer(track);
       player.play();
     });

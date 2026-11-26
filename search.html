@@ -94,18 +94,30 @@
                     <!-- RISULTATI RICERCA -->
                     <div class="search-results">
                         <!-- BRANI -->
-                        <section class="row mb-4" id="row-tracks" hidden>
+                        <section class="row mb-4 mySection" id="row-tracks" hidden>
                             <h2>Brani</h2>
+                            <button class="btn search-spinner" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm " aria-hidden="true"></span>
+                                <span role="status">Loading...</span>
+                            </button>
                             <div id="grid-tracks" class="grid row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3"></div>
                         </section>
                         <!-- ALBUM -->
-                        <section class="row mb-4" id="row-albums" hidden>
+                        <section class="row mb-4 mySection" id="row-albums" hidden>
                             <h2>Album</h2>
+                            <button class="btn search-spinner" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm " aria-hidden="true"></span>
+                                <span role="status">Loading...</span>
+                            </button>
                             <div id="grid-albums" class="grid row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3"></div>
                         </section>
                         <!-- ARTISTI -->
-                        <section class="mb-4" id="row-artists" hidden>
+                        <section class="mb-4 mySection" id="row-artists" hidden>
                             <h2>Artisti</h2>
+                            <button class="btn search-spinner" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm " aria-hidden="true"></span>
+                                <span role="status">Loading...</span>
+                            </button>
                             <div id="grid-artists" class="grid row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3"></div>
                         </section>
                         <!-- NESSUN RISULTATO -->

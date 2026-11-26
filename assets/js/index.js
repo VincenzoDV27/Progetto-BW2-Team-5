@@ -1,20 +1,27 @@
 import { fetchJSON, API_BASE } from "./api.js";
 import { Track } from "./models.js";
-import { player, updatePlayer } from "./player.js";
-import { myPreferit, renderCard, gridFavorites } from "./cards.js";
+import { player, updatePlayer, addToHistory } from "./player.js";
+import {
+  myPreferit,
+  renderCard,
+  gridFavorites,
+  renderAsideFavs,
+} from "./cards.js";
 
 const gridPop = document.querySelector("#grid-pop");
 const gridRock = document.querySelector("#grid-rock");
 
 const home = document.querySelector(".home");
 
-let tracks = [];
+const gridRecent = document.querySelector("#grid-recent");
+const myHistory = JSON.parse(localStorage.getItem("myHistory")) ?? [];
 
-const loadPref = JSON.parse(localStorage.getItem("myPreferit")) ?? []; // se non c'e niente, array vuoto
-const loadPrefSearch =
-  JSON.parse(localStorage.getItem("myPreferitSearch")) ?? []; // se non c'e niente, array vuoto
-myPreferit.push(...loadPref, ...loadPrefSearch);
+let tracks = [];
+renderAsideFavs();
 renderCard(myPreferit, gridFavorites);
+
+renderCard(myHistory, gridRecent);
+console.log(myHistory);
 
 const BASE_URL = `${API_BASE}` + "/search?entity=song&limit=8&term=";
 
@@ -43,23 +50,7 @@ const loadSuggestions = async () => {
 };
 loadSuggestions();
 
-export function create(tag, classes, texts) {
-  const element = document.createElement(tag);
-  if (classes) element.className = classes;
-  if (texts !== undefined) element.textContent = texts;
-  return element;
-}
-
-export function savePreferit() {
-  localStorage.setItem("myPreferit", JSON.stringify(myPreferit));
-}
-
-export function imgClean(url, size = 600) {
-  if (!url) return "";
-  return url.replace(/\d+x\d+bb/, `${size}x${size}bb`);
-}
-
-//1.add event listener su tutta la griglia section class home
+//add event listener su tutta la griglia section class home
 home.addEventListener("click", (e) => {
   // ESCLUDO IL CLICK SUI PREFERITI
   if (e.target.closest(".btnPref, .btnPrefActive")) return;
