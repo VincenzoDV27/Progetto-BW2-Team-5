@@ -12,18 +12,24 @@ const gridAlbums = document.querySelector("#grid-albums");
 const gridArtists = document.querySelector("#grid-artists");
 const searchSpinner = document.querySelectorAll(".search-spinner");
 const mySections = document.querySelectorAll(".mysection");
+const searchEmpty = document.querySelector("#search-empty");
+const retryButton = document.querySelector("#retry-search");
+const lastSearchBox = document.querySelector(".last-search");
+const lastSearch = document.querySelector("#lastSearch");
 const setLoading = (on) =>
   searchSpinner.forEach((s) => s.classList.toggle("d-none", !on));
 
 //array per i brani della ricerca
 let tracksFound = [];
 renderAsideFavs();
+
 /* ricerca generica, entity = canzone o album o artista */
 const search = async (term, entity, limit) => {
   const url = `${API_BASE}/search?term=${encodeURIComponent(term)}&entity=${entity}&limit=${limit}`;
   const data = await fetchJSON(url);
   return data.results;
 };
+
 /* traccia */
 export const searchTracks = async (term, limit = 12) => {
   const results = await search(term, "song", limit);
@@ -47,8 +53,8 @@ export const searchArtists = async (term, limit = 12) => {
 /* GESTIONE EVENTI PAGINA SEARCH */
 let timerSearch;
 
-if (searchButton && inputUser) {
-  searchButton.addEventListener("click", (e) => {
+function gestisciRicerca(e) {
+  if (e.type === "click" || e.key === "Enter") {
     e.preventDefault();
 
     const term = inputUser.value.trim();
@@ -56,22 +62,69 @@ if (searchButton && inputUser) {
     if (!term) return;
 
     searchAll(term);
-  });
-
-  inputUser.addEventListener("input", () => {
-    clearTimeout(timerSearch);
-
-    const query = inputUser.value.trim();
-
-    if (!query) {
-      clearSearch();
-      return;
-    }
-    timerSearch = setTimeout(() => {
-      searchAll(query);
-    }, 400);
-  });
+    inputUser.blur(); // fa partire il salvataggio finché il testo c'è ancora
+    clearInputUser();
+  }
 }
+
+searchButton.addEventListener("click", gestisciRicerca);
+inputUser.addEventListener("keydown", gestisciRicerca);
+
+inputUser.addEventListener("input", () => {
+  clearTimeout(timerSearch);
+
+  const query = inputUser.value.trim();
+
+  if (!query) {
+    clearSearch();
+    return;
+  }
+  timerSearch = setTimeout(() => {
+    searchAll(query);
+  }, 1000);
+});
+
+const CHIAVE_RICERCHE = "ricercheRecenti";
+
+/* salva il termine in cima alla lista, togliendo un eventuale doppione */
+function salvaRicerca(term) {
+  const ricerche = JSON.parse(localStorage.getItem(CHIAVE_RICERCHE)) || [];
+
+  const senzaDoppione = ricerche.filter(
+    (r) => r.toLowerCase() !== term.toLowerCase(),
+  );
+
+  senzaDoppione.unshift(term); // la più recente va per prima
+
+  localStorage.setItem(
+    CHIAVE_RICERCHE,
+    JSON.stringify(senzaDoppione.slice(0, 10)),
+  );
+  mostraUltimaRicerca();
+}
+
+function mostraUltimaRicerca() {
+  const ricerche = JSON.parse(localStorage.getItem(CHIAVE_RICERCHE)) || [];
+
+  if (ricerche.length === 0) {
+    lastSearchBox.hidden = true;
+    return;
+  }
+
+  lastSearch.textContent = ricerche[0];
+  lastSearchBox.hidden = false;
+}
+
+lastSearch.addEventListener("click", () => {
+  const term = lastSearch.textContent;
+
+  if (!term) return;
+
+  clearTimeout(timerSearch); // annullo una ricerca col timer eventualmente in attesa
+  searchAll(term);
+});
+
+mostraUltimaRicerca(); // al caricamento della pagina
 
 const searchAll = async (term) => {
   mySections.forEach((spinner) => (spinner.hidden = false));
@@ -86,6 +139,13 @@ const searchAll = async (term) => {
     const arrayTrack = tracks.status === "fulfilled" ? tracks.value : [];
     const arrayAlbum = albums.status === "fulfilled" ? albums.value : [];
     const arrayArtist = artists.status === "fulfilled" ? artists.value : [];
+
+    const noResults =
+      arrayTrack.length === 0 &&
+      arrayAlbum.length === 0 &&
+      arrayArtist.length === 0;
+
+    searchEmpty.hidden = !noResults;
 
     //salvo i brani
     tracksFound = arrayTrack;
@@ -140,4 +200,20 @@ function clearSearch() {
   gridTracks.closest("section").hidden = true;
   gridAlbums.closest("section").hidden = true;
   gridArtists.closest("section").hidden = true;
+
+  // NASCONDO IL MESSAGGIO DI NESSUN RISULTATO
+  searchEmpty.hidden = true;
+
+  // AZZERO I BRANI TROVATI
+  tracksFound = [];
 }
+
+function clearInputUser() {
+  inputUser.value = "";
+}
+
+retryButton.addEventListener("click", () => {
+  inputUser.value = "";
+  clearSearch();
+  inputUser.focus();
+});

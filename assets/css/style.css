@@ -204,7 +204,7 @@ main {
       padding: 0;
       border: 0;
       border-radius: 50%;
-      background: var(--text-secondary);
+      background: var(--bg-logo);
       color: #000;
       cursor: pointer;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);

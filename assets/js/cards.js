@@ -1,5 +1,6 @@
 export const myPreferit = JSON.parse(localStorage.getItem("myPreferit")) ?? [];
 export const gridFavorites = document.querySelector("#grid-favorites");
+
 export function create(tag, classes, texts) {
   const element = document.createElement(tag);
   if (classes) element.className = classes;

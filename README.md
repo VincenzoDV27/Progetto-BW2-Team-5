@@ -54,11 +54,13 @@ Progetto didattico che riproduce l'esperienza di una piattaforma di streaming mu
 - [x] Cronologia dei brani riprodotti.
 - [x] Home: recenti, preferiti e suggerimenti per genere.
 - [x] Layout responsive e pubblicazione su GitHub Pages.
+- [x] Gestione errori: canzone non trovata, Nessun risultato trovato, pulsante "riprova".
+- [x] Gestione errori: In caso di mancata risposta dell'API aggiunta messaggio di errore.
+- [x] Salvataggio dell'ultima ricerca.
+- [x] Sezione riprodotti di recente.
 
 ### Da completare
 
-- [ ] Salvataggio dell'ultima ricerca.
-- [ ] Gestione errori: input vuoto, nessun risultato, pulsante "riprova".
 - [ ] Test dei casi limite: input vuoto, reload della pagina, mobile.
 
 ### Extra (se avanza tempo)

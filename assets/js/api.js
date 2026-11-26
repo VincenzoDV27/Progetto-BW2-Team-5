@@ -5,6 +5,22 @@ export const API_BASE = "https://itunes.apple.com";
 
 /* fetchJSON con try/catch */
 
+const showApiError = () => {
+  let errorMessage = document.querySelector("#api-error");
+
+  if (!errorMessage) {
+    errorMessage = document.createElement("div");
+    errorMessage.id = "api-error";
+    errorMessage.className = "alert alert-danger text-center m-3";
+    errorMessage.setAttribute("role", "alert");
+
+    errorMessage.textContent =
+      "⚠️ Impossibile comunicare con l'API ITunes. Controlla la connessione e riprova.";
+
+    document.querySelector("header").after(errorMessage);
+  }
+};
+
 export const fetchJSON = async (url) => {
   try {
     const response = await fetch(url);
@@ -12,6 +28,7 @@ export const fetchJSON = async (url) => {
     return await response.json();
   } catch (error) {
     console.error("fetchJSON:", error);
+    showApiError();
     return { results: [], resultCount: 0 };
   }
 };

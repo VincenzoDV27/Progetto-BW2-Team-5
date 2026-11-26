@@ -152,3 +152,51 @@ export function renderRecent() {
   if (!gridRecent) return; // altre pagine
   renderCard(myHistory, gridRecent);
 }
+
+export function syncPlayBtn() {
+  // id del brano caricato nel player
+  const currentId = String(player.currentTrack?.trackId ?? ``);
+  //se non è in pausa è in play
+  const playing = !player.audio.paused;
+
+  // prendo tutte le card
+  document.querySelectorAll(`.card-personal`).forEach((card) => {
+    const btnPlayer = card.querySelector(`.btnPlay .material-symbols-rounded`);
+
+    //controllo se la card è quella in riproduzione
+    const truePlay = playing && card.dataset.id === currentId;
+
+    //se brano in play, icona pausa
+    btnPlayer.textContent = truePlay ? `pause` : `play_arrow`;
+    //etichetta screen reader
+    btnPlayer.parentElement.setAttribute(
+      `aria-label`,
+      truePlay ? "Metti in pausa" : "Riproduci",
+    );
+    //classe css
+    card.classList.toggle(`is-plating`, truePlay);
+  });
+}
+//ad ogni cambio stato dell'audio
+player.audio.addEventListener(`play`, syncPlayBtn); //play
+player.audio.addEventListener(`pause`, syncPlayBtn); //pausa
+player.audio.addEventListener(`ended`, syncPlayBtn); //end
+
+export function playCard(track) {
+  //il brano è caricato?
+  // confronta l'id del brano cliccato con quello caricato.
+  const curretnPlay = player.currentTrack?.trackId === track.trackId;
+
+  if (curretnPlay) {
+    if (player.audio.paused) {
+      player.play();
+    } else {
+      player.audio.pause();
+    }
+    return;
+  }
+
+  player.select(track);
+  updatePlayer(track);
+  player.play();
+}
