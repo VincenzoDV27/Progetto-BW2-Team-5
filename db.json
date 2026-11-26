@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "email": "pippo27@gmail.com",
+      "password": "$2a$10$iP0yydhggN.rvQHRXNP.meuLAxIP/5ul1HobVgbhRhE/T6IGtZQFa",
+      "userName": "pippo",
+      "id": 1
+    },
+    {
+      "email": "nicholasmedugno1@gmai.com",
+      "password": "$2a$10$roi.535OMVk/T4rtVmNrnudTuA5mkU.pROBpD/yKWevUc5.hksnb.",
+      "userName": "nick",
+      "id": 2
+    }
+  ]
+}

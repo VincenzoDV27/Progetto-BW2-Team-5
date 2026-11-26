@@ -65,6 +65,8 @@ Progetto didattico che riproduce l'esperienza di una piattaforma di streaming mu
 - [x] Pulsante play direttamente sulle card.
 - [x] "I brani che ti piacciono" raccolti in un unico array.
 - [x] Sezione "Album che ti piacciono".
+- [x] Interazione con ulteriore API per rendirizzare foto artisti.
+- [x] Se la foto non è presente anche nella seconda API vengono rendirizzate le maiuscole del nome dell'artista.
 
 ---
 
@@ -237,6 +239,16 @@ La logica è organizzata in moduli ES, che esportano e importano le funzioni tra
 - Controlli per brano precedente e successivo, con passaggio automatico alla traccia seguente.
 - Cronologia dei brani salvata in LocalStorage e mostrata nella Home.
 - Aggiornamento della gestione del player e delle card musicali.
+- Interazione con ulteriore API per rendirizzare foto artisti.
+- Se la foto non è presente anche nella seconda API vengono rendirizzate le maiuscole del nome dell'artista.
+
+### v4.5
+
+- Riorganizzazione del codice JavaScript in moduli; miglioramento della gestione di brani, album e artisti; aggiornamento delle card musicali e degli artisti inclusa la visualizzazione degli artisti preferiti; ottimizzazione della gestione del player e della riproduzione casuale dei brani.
+
+### v4.6
+
+- Implementazione aside su mobile.
 
 ---
 
@@ -272,6 +284,8 @@ La logica è organizzata in moduli ES, che esportano e importano le funzioni tra
 - Home con riprodotti di recente, preferiti e generi.
 - Gestione degli errori: input vuoto, nessun risultato, pulsante "riprova", API che non risponde.
 - Extra: filtri nella ricerca, modale a tutto schermo e pulsante play sulle card.
+- Interazione con ulteriore API per rendirizzare foto artisti.
+- Se la foto non è presente anche nella seconda API vengono rendirizzate le maiuscole del nome dell'artista.
 - Test dei limiti della ricerca sull'API.
 - Controllo del codice: niente `var`, `innerHTML` e `onclick`; console pulita.
 - Layout responsive e pubblicazione su GitHub Pages.
