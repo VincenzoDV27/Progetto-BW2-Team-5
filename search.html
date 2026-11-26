@@ -37,10 +37,15 @@
                 </nav>
                 <!-- sezione preferiti -->
 
-                <p class="sidebar-section-title d-none d-lg-block mt-4 mb-2">I tuoi preferiti</p>
+                <p class="sidebar-section-title d-none d-lg-block mt-4 mb-2">brani preferiti</p>
                 <ul class="sidebar-list list-unstyled d-none d-lg-block" id="sidebar-favs">
                     <li class="fst-italic">Ancora nessuno</li>
                 </ul>
+                <p class="sidebar-section-title d-none d-lg-block mt-4 mb-2">
+                    Album preferiti
+                </p>
+                <ul class="sidebar-list list-unstyled d-none d-lg-block" id="sidebar-album-favs"></ul>
+
 
 
             </aside>
@@ -91,9 +96,16 @@
                             </button>
                         </div>
                     </div>
-                    <div class="last-search" hidden>
-                        <p>Ultima ricerca: <span id="lastSearch"></span></p>
+                    <div class="last-search">
+                        <span class="last-search-label">
+                            <i class="bi bi-clock-history"></i>
+                            ULTIMA RICERCA:
+                        </span>
+
+                        <span id="lastSearch"></span>
                     </div>
+
+                    <div id="search-filters" class="d-flex flex-wrap gap-2 mb-4"></div>
                     <!-- RISULTATI RICERCA -->
                     <div class="search-results">
                         <!-- BRANI -->
@@ -124,10 +136,10 @@
                             <div id="grid-artists" class="grid row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3"></div>
                         </section>
                         <!-- NESSUN RISULTATO -->
-                         <div id="search-empty" class="text-center" hidden>
+                        <div id="search-empty" class="text-center" hidden>
                             <p>Nessun risultato trovato...</p>
                             <button id="retry-search" class="btn btn-light" type="button">Riprova</button>
-                         </div>
+                        </div>
                     </div>
                 </section>
 
@@ -171,8 +183,8 @@
                             <span class="material-symbols-rounded">skip_next</span>
                         </button>
 
-                        <button class="btn-ctrl" type="button">
-                            <span class="material-symbols-rounded">repeat</span>
+                        <button class="btn-ctrl btn-fullscreen" type="button">
+                            <span class="material-symbols-rounded">fullscreen</span>
                         </button>
 
                     </div>
@@ -206,5 +218,32 @@
                 </div>
             </div>
         </footer>
+        <!-- PLAYER A SCHERMO INTERO -->
+        <div class="fullscreen-player" id="fullscreen-player">
+            <button class="btn-close-player" type="button">
+                <span class="material-symbols-rounded">close</span>
+            </button>
 
+            <div class="fullscreen-content">
+                <div class="vinyl-disc">
+                    <img src="https://placehold.co/600x600" alt="Copertina brano" class="fullscreen-cover" />
+                </div>
+
+                <div class="fullscreen-controls">
+                    <button class="fullscreen-prev" type="button">
+                        <span class="material-symbols-rounded">skip_previous</span>
+                    </button>
+
+                    <button class="fullscreen-play" type="button">
+                        <span class="material-symbols-rounded">play_arrow</span>
+                    </button>
+
+                    <button class="fullscreen-next" type="button">
+                        <span class="material-symbols-rounded">skip_next</span>
+                    </button>
+                </div>
+            </div>
+
+            <h2 class="fullscreen-title"></h2>
+            <p class="fullscreen-artist">-</p>
 </body>

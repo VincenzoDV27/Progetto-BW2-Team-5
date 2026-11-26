@@ -1,5 +1,5 @@
-import { Player } from "./models.js";
-import { imgClean, renderCard } from "./cards.js";
+import { Player, Track } from "./models.js";
+import { imgClean, renderCard, myPreferit } from "./cards.js";
 
 /* CREAZIONE DEL PLAYER */
 export const player = new Player();
@@ -16,6 +16,7 @@ const btnPrevious = document.querySelector(
 const btnNext = document.querySelector(
   ".player-controls .btn-ctrl:nth-of-type(4)",
 );
+const sidebarFavs = document.querySelector("#sidebar-favs");
 const currentTime = document.querySelector(".current-time");
 const duration = document.querySelector(".duration");
 const progressFill = document.querySelector(".progress-fill");
@@ -25,11 +26,41 @@ const iconVolume = document.querySelector(
   ".player-right .material-symbols-rounded",
 );
 
+/* ELEMENTI PLAYER A SCHERMO INTERO */
+const fullscreenPlayer = document.querySelector("#fullscreen-player");
+const fullscreenButton = document.querySelector(".btn-fullscreen");
+const closeFullscreen = document.querySelector(".btn-close-player");
+const fullscreenCover = document.querySelector(".fullscreen-cover");
+const fullscreenTitle = document.querySelector(".fullscreen-title");
+const fullscreenArtist = document.querySelector(".fullscreen-artist");
+/* CONTROLLI PLAYER FULLSCREEN */
+const fullscreenPrev = document.querySelector(".fullscreen-prev");
+const fullscreenPlay = document.querySelector(".fullscreen-play");
+const fullscreenNext = document.querySelector(".fullscreen-next");
+
+/* COLLEGAMENTO AI CONTROLLI DEL PLAYER */
+fullscreenPrev.addEventListener("click", () => {
+  btnPrevious.click();
+});
+
+fullscreenPlay.addEventListener("click", () => {
+  btnPlay.click();
+});
+
+fullscreenNext.addEventListener("click", () => {
+  btnNext.click();
+});
+
 /* AGGIORNAMENTO INFORMAZIONI PLAYER */
 export function updatePlayer(track) {
   playerCover.src = imgClean(track.artworkUrl100, 600);
   playerTitle.textContent = track.trackName;
   playerArtist.textContent = track.artistName;
+
+  // AGGIORNAMENTO PLAYER A SCHERMO INTERO
+  fullscreenCover.src = imgClean(track.artworkUrl100, 600);
+  fullscreenTitle.textContent = track.trackName;
+  fullscreenArtist.textContent = track.artistName;
 
   currentTime.textContent = "0:00";
   duration.textContent = "0:00";
@@ -38,9 +69,40 @@ export function updatePlayer(track) {
   playIcon.textContent = "play_arrow";
 }
 
+/* APERTURA PLAYER A SCHERMO INTERO */
+if (fullscreenButton && fullscreenPlayer && closeFullscreen) {
+  fullscreenButton.addEventListener("click", () => {
+    if (!player.currentTrack) return;
+
+    fullscreenPlayer.style.display = "flex";
+  });
+
+  /* CHIUSURA PLAYER */
+  closeFullscreen.addEventListener("click", () => {
+    fullscreenPlayer.style.display = "none";
+  });
+
+  /* CHIUSURA CLICCANDO SULLO SFONDO */
+  fullscreenPlayer.addEventListener("click", (e) => {
+    if (e.target === fullscreenPlayer) {
+      fullscreenPlayer.style.display = "none";
+    }
+  });
+
+  /* CHIUSURA CON TASTO ESC */
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      fullscreenPlayer.style.display = "none";
+    }
+  });
+}
+
 /* AGGIORNAMENTO ICONA PLAY/PAUSA */
 function updatePlayIcon() {
-  playIcon.textContent = player.audio.paused ? "play_arrow" : "pause";
+  const icon = player.audio.paused ? "play_arrow" : "pause";
+
+  playIcon.textContent = icon;
+  fullscreenPlay.querySelector(".material-symbols-rounded").textContent = icon;
 }
 
 /* PLAY E PAUSA */
@@ -58,6 +120,9 @@ btnPlay.addEventListener("click", () => {
 
 /* BRANO PRECEDENTE */
 btnPrevious.addEventListener("click", () => {
+  // SE SIAMO AL PRIMO BRANO, NON FACCIO NULLA
+  if (player.currentIndex <= 0) return;
+
   player.previous();
 
   if (player.currentTrack) {
@@ -154,27 +219,33 @@ export function renderRecent() {
 }
 
 export function syncPlayBtn() {
-  // id del brano caricato nel player
-  const currentId = String(player.currentTrack?.trackId ?? ``);
-  //se non è in pausa è in play
+  // ID DEL BRANO CARICATO NEL PLAYER
+  const currentId = String(player.currentTrack?.trackId ?? "");
+
+  // CONTROLLO SE IL BRANO È IN RIPRODUZIONE
   const playing = !player.audio.paused;
 
-  // prendo tutte le card
-  document.querySelectorAll(`.card-personal`).forEach((card) => {
-    const btnPlayer = card.querySelector(`.btnPlay .material-symbols-rounded`);
+  // RECUPERO TUTTE LE CARD
+  document.querySelectorAll(".card-personal").forEach((card) => {
+    const btnPlayer = card.querySelector(".btnPlay .material-symbols-rounded");
 
-    //controllo se la card è quella in riproduzione
+    // SE LA CARD NON HA IL PULSANTE PLAY, LA SALTO
+    if (!btnPlayer) return;
+
+    // CONTROLLO SE È LA CARD DEL BRANO IN RIPRODUZIONE
     const truePlay = playing && card.dataset.id === currentId;
 
-    //se brano in play, icona pausa
-    btnPlayer.textContent = truePlay ? `pause` : `play_arrow`;
-    //etichetta screen reader
+    // AGGIORNO L'ICONA
+    btnPlayer.textContent = truePlay ? "pause" : "play_arrow";
+
+    // AGGIORNO L'ETICHETTA ACCESSIBILE
     btnPlayer.parentElement.setAttribute(
-      `aria-label`,
+      "aria-label",
       truePlay ? "Metti in pausa" : "Riproduci",
     );
-    //classe css
-    card.classList.toggle(`is-plating`, truePlay);
+
+    // AGGIORNO LA CLASSE CSS
+    card.classList.toggle("is-plating", truePlay);
   });
 }
 //ad ogni cambio stato dell'audio
@@ -185,9 +256,14 @@ player.audio.addEventListener(`ended`, syncPlayBtn); //end
 export function playCard(track) {
   //il brano è caricato?
   // confronta l'id del brano cliccato con quello caricato.
-  const curretnPlay = player.currentTrack?.trackId === track.trackId;
-
-  if (curretnPlay) {
+  const currentPlay = player.currentTrack?.trackId === track.trackId;
+  console.log(
+    `playCard → currentPlay:`,
+    currentPlay,
+    `| paused`,
+    player.audio.paused,
+  );
+  if (currentPlay) {
     if (player.audio.paused) {
       player.play();
     } else {
@@ -199,4 +275,33 @@ export function playCard(track) {
   player.select(track);
   updatePlayer(track);
   player.play();
+}
+
+//click su lista preferiti
+if (sidebarFavs) {
+  //evnt delegation
+  sidebarFavs.addEventListener("click", (e) => {
+    //risalgo al tag li
+    const li = e.target.closest("li[data-id]");
+    if (!li) {
+      return;
+    }
+    //cerco tra i preferiti
+    const item = myPreferit.find(
+      (element) => String(element.trackId) === li.dataset.id,
+    );
+    //se non lo trovo non fa nulla
+    if (!item.previewUrl) {
+      return;
+    }
+    // se è già caricato
+    if (player.currentTrack?.trackId === item.trackId) {
+      return;
+    }
+
+    //ricostruisco l'oggetto track
+    const track = new Track(item);
+    player.select(track);
+    updatePlayer(track);
+  });
 }

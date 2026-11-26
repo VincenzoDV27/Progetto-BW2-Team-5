@@ -1,6 +1,12 @@
 import { fetchJSON, API_BASE } from "./api.js";
 import { Track } from "./models.js";
-import { player, updatePlayer, addToHistory } from "./player.js";
+import {
+  player,
+  updatePlayer,
+  myHistory,
+  renderRecent,
+  playCard,
+} from "./player.js";
 import {
   myPreferit,
   renderCard,
@@ -13,15 +19,18 @@ const gridRock = document.querySelector("#grid-rock");
 
 const home = document.querySelector(".home");
 
-const gridRecent = document.querySelector("#grid-recent");
-const myHistory = JSON.parse(localStorage.getItem("myHistory")) ?? [];
+// const gridRecent = document.querySelector("#grid-recent");
+// const myHistory = JSON.parse(localStorage.getItem("myHistory")) ?? [];
+renderRecent();
 
 let tracks = [];
+let popTracks = [];
+let rockTracks = [];
 renderAsideFavs();
 renderCard(myPreferit, gridFavorites);
 
-renderCard(myHistory, gridRecent);
-console.log(myHistory);
+// renderCard(myHistory, gridRecent);
+// console.log(myHistory);
 
 const BASE_URL = `${API_BASE}` + "/search?entity=song&limit=8&term=";
 
@@ -33,12 +42,15 @@ const loadSuggestions = async () => {
     ]);
 
     if (pop.status === "fulfilled") {
-      renderCard(pop.value.results, gridPop);
+      popTracks = pop.value.results;
+      tracks.push(...popTracks);
+      renderCard(popTracks, gridPop);
     }
 
     if (rock.status === "fulfilled") {
-      tracks.push(...pop.value.results, ...rock.value.results);
-      renderCard(rock.value.results, gridRock);
+      rockTracks = rock.value.results;
+      tracks.push(...rockTracks);
+      renderCard(rockTracks, gridRock);
     }
   } catch {
     //se non funziona
@@ -57,30 +69,69 @@ home.addEventListener("click", (e) => {
 
   // INTERCETTO LA CARD
   const cardSelected = e.target.closest(".card-personal");
-
   if (!cardSelected) return;
 
   // RECUPERO L'ID DEL BRANO
   const cardSelectedId = Number(cardSelected.dataset.id);
 
-  // CERCO IL BRANO NEI DATI DISPONIBILI
-  const trackData =
-    tracks.find((item) => item.trackId === cardSelectedId) ??
-    myPreferit.find((item) => item.trackId === cardSelectedId);
+  // INDIVIDUO LA GRIGLIA DI PROVENIENZA
+  const selectedGrid = cardSelected.closest(
+    "#grid-pop, #grid-rock, #grid-favorites, #grid-recent",
+  );
+
+  // RECUPERO I BRANI DELLA SEZIONE
+  let selectedTracks = [];
+
+  if (selectedGrid?.id === "grid-pop") {
+    selectedTracks = popTracks;
+  } else if (selectedGrid?.id === "grid-rock") {
+    selectedTracks = rockTracks;
+  } else if (selectedGrid?.id === "grid-favorites") {
+    selectedTracks = myPreferit;
+  } else if (selectedGrid?.id === "grid-recent") {
+    selectedTracks = myHistory;
+  }
+
+  // CERCO IL BRANO
+  const trackData = selectedTracks.find(
+    (item) => item.trackId === cardSelectedId,
+  );
 
   if (!trackData) return;
 
   // CREO L'OGGETTO TRACK
   const track = new Track(trackData);
 
-  // SELEZIONO IL BRANO
-  player.select(track);
+  // CONTROLLO SE È CAMBIATO IL BRANO
+  const isNewTrack = player.currentTrack?.trackId !== cardSelectedId;
 
-  // AGGIORNO IL PLAYER
-  updatePlayer(track);
+  // CONTROLLO SE È CAMBIATA LA CODA
+  const queueChanged =
+    player.queue.length !== selectedTracks.length ||
+    player.queue.some(
+      (item, index) => item.trackId !== selectedTracks[index].trackId,
+    );
 
-  // SE CLICCO IL BOTTONE PLAY FACCIO PARTIRE
-  if (e.target.closest(`.btnPlay`)) {
-    player.play();
+  // AGGIORNO LA CODA SE NECESSARIO
+  if (isNewTrack || queueChanged) {
+    const queue = selectedTracks.map((item) => new Track(item));
+    const index = queue.findIndex((item) => item.trackId === cardSelectedId);
+
+    player.setQueue(queue, index);
+  }
+
+  // SE CLICCO SUL PULSANTE PLAY
+  if (e.target.closest(".btnPlay")) {
+    // SE È CAMBIATO IL BRANO O LA CODA, AGGIORNO IL PLAYER
+    if (isNewTrack || queueChanged) {
+      updatePlayer(track);
+      player.play();
+    } else {
+      // SE IL BRANO È GIÀ SELEZIONATO, GESTISCO PLAY E PAUSA
+      playCard(track);
+    }
+  } else {
+    // SE CLICCO SULLA CARD, AGGIORNO LE INFORMAZIONI DEL PLAYER
+    updatePlayer(track);
   }
 });

@@ -1,11 +1,14 @@
 /*>>>>>>>> MANUEL <<<<<<<<<<< */
-import { Track, Album, Artist } from "./models.js";
+import { Track, Album, Artist, ArtistImg } from "./models.js";
 
 export const API_BASE = "https://itunes.apple.com";
 
+export const API_SECOND =
+  "https://www.theaudiodb.com/api/v1/json/123/search.php?s=";
+
 /* fetchJSON con try/catch */
 
-const showApiError = () => {
+const showApiError = (status) => {
   let errorMessage = document.querySelector("#api-error");
 
   if (!errorMessage) {
@@ -14,8 +17,13 @@ const showApiError = () => {
     errorMessage.className = "alert alert-danger text-center m-3";
     errorMessage.setAttribute("role", "alert");
 
-    errorMessage.textContent =
-      "⚠️ Impossibile comunicare con l'API ITunes. Controlla la connessione e riprova.";
+    if (status === 429) {
+      errorMessage.textContent =
+        "Hai effettuato troppe richieste. Attendi qualche secondo prima di riprovare.";
+    } else {
+      errorMessage.textContent =
+        "⚠️ Impossibile comunicare con l'API iTunes. Controlla la connessione e riprova.";
+    }
 
     document.querySelector("header").after(errorMessage);
   }
@@ -24,12 +32,22 @@ const showApiError = () => {
 export const fetchJSON = async (url) => {
   try {
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`errore http ${response.status}`);
+
+    if (!response.ok) {
+      showApiError(response.status);
+      return {
+        results: [],
+        resultCount: 0,
+        error: true,
+        status: response.status,
+      };
+    }
+
     return await response.json();
   } catch (error) {
     console.error("fetchJSON:", error);
     showApiError();
-    return { results: [], resultCount: 0 };
+    return { results: [], resultCount: 0, error: true };
   }
 };
 
@@ -69,4 +87,18 @@ export const getArtist = async (id) => {
     artist: artistData ? new Artist(artistData) : null,
     tracks,
   };
+};
+
+export const artistImg = async (name) => {
+  try {
+    const response = await fetch(API_SECOND + encodeURIComponent(name));
+    const dati = await response.json();
+
+    if (!dati.artists) return null; // cantante non trovato
+
+    return dati.artists[0].strArtistThumb || null; // a volte la foto è vuota
+  } catch (errore) {
+    console.error("errore nel caricamento della foto", errore);
+    return null;
+  }
 };

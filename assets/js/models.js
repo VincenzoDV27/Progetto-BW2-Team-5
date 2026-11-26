@@ -11,6 +11,7 @@ export class Track {
     this.collectionName = data.collectionName;
     this.previewUrl = data.previewUrl;
     this.artworkUrl100 = data.artworkUrl100;
+    this.wrapperType = data.wrapperType;
   }
 }
 
@@ -25,6 +26,7 @@ export class Album {
     this.artistId = data.artistId;
     this.artworkUrl100 = data.artworkUrl100;
     this.releaseDate = data.releaseDate;
+    this.wrapperType = data.wrapperType;
   }
 }
 
@@ -134,5 +136,11 @@ export class Player {
   seek(seconds) {
     if (!this.currentTrack) return;
     this.audio.currentTime = seconds;
+  }
+}
+
+export class ArtistImg {
+  constructor(data) {
+    this.strArtistThumb = data.strArtistThumb;
   }
 }

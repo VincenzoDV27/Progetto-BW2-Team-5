@@ -193,10 +193,13 @@ main {
       border-radius: 4px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     }
+
     /* bottone per play canzone */
     .btnPlay {
-      position: absolute; /* si sovrappone all'immagine */
-      right: 0.5rem; /* in basso a destra */
+      position: absolute;
+      /* si sovrappone all'immagine */
+      right: 0.5rem;
+      /* in basso a destra */
       bottom: 0.5rem;
 
       width: 2.5rem;
@@ -224,11 +227,13 @@ main {
         font-size: 1.75rem;
         line-height: 1;
       }
+
       &:hover {
         transform: scale(1.05);
       }
     }
   }
+
   &:hover .btnPlay,
   &:focus-within .btnPlay {
     opacity: 1;
@@ -526,6 +531,37 @@ main {
   box-shadow: none !important;
 }
 
+.last-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  margin: 20px 0px;
+  padding: 10px 14px;
+  background-color: #252525;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.last-search-label {
+  color: #999;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+#lastSearch {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+#lastSearch:hover {
+  color: #ffc107;
+}
+
 /* PAGINA ALBUM */
 
 .album-page {
@@ -556,6 +592,7 @@ main {
   flex-direction: column;
   gap: 10px;
 }
+
 .hero-actions {
   margin-top: 15px;
   margin-bottom: 40px;
@@ -765,3 +802,163 @@ main {
 }
 
 /* END ARTISTA */
+
+/* MODALE SCHERMO INTERO */
+
+.fullscreen-player {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: rgba(18, 18, 18, 0.88);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: #fff;
+}
+
+/* CONTENUTO CENTRALE */
+.fullscreen-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+/* COPERTINA */
+.fullscreen-cover {
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* TITOLO BRANO */
+.fullscreen-title {
+  margin-top: 30px;
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* NOME ARTISTA */
+.fullscreen-artist {
+  color: #aaa;
+  font-size: 18px;
+}
+
+/* CONTROLLI PLAYER FULLSCREEN */
+.fullscreen-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 35px;
+  margin-top: 30px;
+}
+
+.fullscreen-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.fullscreen-controls button:hover {
+  color: #ffc107;
+  transform: scale(1.12);
+}
+
+.fullscreen-controls button .material-symbols-rounded {
+  font-size: 32px;
+}
+
+.fullscreen-play {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #fff !important;
+  color: #111 !important;
+}
+
+.fullscreen-play .material-symbols-rounded {
+  font-size: 35px;
+}
+
+/* PULSANTE CHIUSURA */
+.btn-close-player {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background: #252525;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-close-player:hover {
+  background: #383838;
+}
+
+/* DISCO IN VINILE */
+.vinyl-disc {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 380px;
+  aspect-ratio: 1;
+  max-width: 85vw;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    #171717 0px,
+    #222 2px,
+    #111 4px,
+    #1a1a1a 6px
+  );
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* ETICHETTA CENTRALE DEL VINILE */
+.fullscreen-cover {
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #111;
+  z-index: 1;
+}
+
+.vinyl-disc {
+  animation: spinVinyl 5s linear infinite;
+}
+
+@keyframes spinVinyl {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* END MODALE */

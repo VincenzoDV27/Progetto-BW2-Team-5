@@ -1,7 +1,7 @@
 import { fetchJSON } from "./api.js";
 import { Track, Album, Artist, Player } from "./models.js";
-import { myPreferit, renderCard } from "./cards.js";
-import { player, updatePlayer, addToHistory } from "./player.js";
+import { myPreferit, renderCard, renderCardArtists } from "./cards.js";
+import { player, updatePlayer, addToHistory, playCard } from "./player.js";
 import { renderAsideFavs } from "./cards.js";
 
 const API_BASE = "https://itunes.apple.com";
@@ -16,6 +16,7 @@ const searchEmpty = document.querySelector("#search-empty");
 const retryButton = document.querySelector("#retry-search");
 const lastSearchBox = document.querySelector(".last-search");
 const lastSearch = document.querySelector("#lastSearch");
+const searchFilters = document.querySelector("#search-filters");
 const setLoading = (on) =>
   searchSpinner.forEach((s) => s.classList.toggle("d-none", !on));
 
@@ -61,6 +62,7 @@ function gestisciRicerca(e) {
 
     if (!term) return;
 
+    saveSearch(term);
     searchAll(term);
     inputUser.blur(); // fa partire il salvataggio finché il testo c'è ancora
     clearInputUser();
@@ -84,27 +86,30 @@ inputUser.addEventListener("input", () => {
   }, 1000);
 });
 
-const CHIAVE_RICERCHE = "ricercheRecenti";
+inputUser.addEventListener("blur", () => {
+  const term = inputUser.value.trim();
+  if (!term) return; // input vuoto, niente da salvare
+  saveSearch(term);
+});
+
+const KEY_SEARCH = "ricercheRecenti";
 
 /* salva il termine in cima alla lista, togliendo un eventuale doppione */
-function salvaRicerca(term) {
-  const ricerche = JSON.parse(localStorage.getItem(CHIAVE_RICERCHE)) || [];
+function saveSearch(term) {
+  const ricerche = JSON.parse(localStorage.getItem(KEY_SEARCH)) || [];
 
-  const senzaDoppione = ricerche.filter(
+  const noDuplicates = ricerche.filter(
     (r) => r.toLowerCase() !== term.toLowerCase(),
   );
 
-  senzaDoppione.unshift(term); // la più recente va per prima
+  noDuplicates.unshift(term); // la più recente va per prima
 
-  localStorage.setItem(
-    CHIAVE_RICERCHE,
-    JSON.stringify(senzaDoppione.slice(0, 10)),
-  );
-  mostraUltimaRicerca();
+  localStorage.setItem(KEY_SEARCH, JSON.stringify(noDuplicates.slice(0, 10)));
+  showLastSearch();
 }
 
-function mostraUltimaRicerca() {
-  const ricerche = JSON.parse(localStorage.getItem(CHIAVE_RICERCHE)) || [];
+function showLastSearch() {
+  const ricerche = JSON.parse(localStorage.getItem(KEY_SEARCH)) || [];
 
   if (ricerche.length === 0) {
     lastSearchBox.hidden = true;
@@ -124,7 +129,62 @@ lastSearch.addEventListener("click", () => {
   searchAll(term);
 });
 
-mostraUltimaRicerca(); // al caricamento della pagina
+showLastSearch(); // al caricamento della pagina
+
+const FILTERS = [
+  { label: "Tutti", value: "all" },
+  { label: "Brani", value: "tracks" },
+  { label: "Album", value: "albums" },
+  { label: "Artisti", value: "artists" },
+];
+
+let activeFilter = "all";
+
+/* creates the filter buttons, the active one is filled */
+function showFilters() {
+  searchFilters.textContent = "";
+
+  FILTERS.forEach(({ label, value }) => {
+    const isActive = value === activeFilter;
+    const colorClass = isActive ? "btn-light" : "btn-outline-light";
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `btn btn-sm rounded-pill ${colorClass}`;
+    btn.textContent = label;
+    btn.dataset.filter = value;
+    btn.setAttribute("aria-pressed", isActive);
+    searchFilters.append(btn);
+  });
+}
+
+/* mostra una sezione solo se ha risultati e se passa il filtro */
+
+function applyFilter() {
+  const sections = [
+    { value: "tracks", grid: gridTracks },
+    { value: "albums", grid: gridAlbums },
+    { value: "artists", grid: gridArtists },
+  ];
+
+  sections.forEach(({ value, grid }) => {
+    const hasResults = grid.children.length > 0;
+    const matchesFilter = activeFilter === "all" || activeFilter === value;
+    grid.closest("section").hidden = !(hasResults && matchesFilter);
+  });
+}
+
+/* click su un filtro (event delegation sul contenitore) */
+searchFilters.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-filter]");
+  if (!btn) return;
+
+  activeFilter = btn.dataset.filter;
+  showFilters(); //aggiorna quale bottone è attivo
+  applyFilter(); //mostra e nascone le sezioni
+});
+
+showFilters(); //al caricamento della pagina mette i filtri
 
 const searchAll = async (term) => {
   mySections.forEach((spinner) => (spinner.hidden = false));
@@ -150,13 +210,10 @@ const searchAll = async (term) => {
     //salvo i brani
     tracksFound = arrayTrack;
 
-    gridTracks.closest("section").hidden = arrayTrack.length === 0;
-    gridAlbums.closest("section").hidden = arrayAlbum.length === 0;
-    gridArtists.closest("section").hidden = arrayArtist.length === 0;
-
     renderCard(arrayTrack, gridTracks);
     renderCard(arrayAlbum, gridAlbums);
-    renderCard(arrayArtist, gridArtists);
+    renderCardArtists(arrayArtist, gridArtists);
+    applyFilter();
   } finally {
     setLoading(false);
   }
@@ -169,7 +226,6 @@ gridTracks.addEventListener(`click`, (e) => {
 
   // INTERCETTO LA CARD
   const cardSelected = e.target.closest(".card-personal");
-
   if (!cardSelected) return;
 
   // RECUPERO L'ID DEL BRANO
@@ -179,12 +235,17 @@ gridTracks.addEventListener(`click`, (e) => {
   const track = tracksFound.find((item) => item.trackId === cardSelectedId);
 
   if (!track) return;
-  addToHistory(track);
-  // SELEZIONO IL BRANO
-  player.select(track);
+  if (player.currentTrack?.trackId !== track.trackId) addToHistory(track);
 
-  // AGGIORNO IL PLAYER
-  updatePlayer(track);
+  if (e.target.closest(".btnPlay")) {
+    playCard(track);
+  } else {
+    // SELEZIONO IL BRANO
+    player.select(track);
+
+    // AGGIORNO IL PLAYER
+    updatePlayer(track);
+  }
 });
 
 function clearSearch() {

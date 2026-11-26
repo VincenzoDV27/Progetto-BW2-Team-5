@@ -1,3 +1,5 @@
+import { artistImg } from "./api.js";
+
 export const myPreferit = JSON.parse(localStorage.getItem("myPreferit")) ?? [];
 export const gridFavorites = document.querySelector("#grid-favorites");
 
@@ -16,7 +18,7 @@ export function renderCard(array, containerPadre) {
     const artistText = item.artistName ?? "";
 
     //DIV CONTENENTE TUTTA LA CARD
-    const myDivCard = create("div", "card-personal"); //AGGIUNGERE CLASSI IL CONTENUTO E' L IMG
+    const myDivCard = create("div", "card-personal");
     myDivCard.dataset.id = item.trackId ?? item.collectionId ?? item.artistId;
     if (item.artistId && !item.trackId && !item.collectionId) {
       myDivCard.classList.add("artist-card");
@@ -121,20 +123,64 @@ export function imgClean(url, size = 600) {
 export function renderAsideFavs() {
   //intercetto la lista
   const sideFavs = document.querySelector(`#sidebar-favs`);
+  const sideAlbumFavs = document.querySelector("#sidebar-album-favs");
 
   //svuoto la lista
   sideFavs.textContent = "";
-
-  if (myPreferit.length === 0) {
-    const listFavs = create("li", "list-favs fst-italic", "Ancora nessuno");
-    sideFavs.append(listFavs);
-    return;
-  }
+  sideAlbumFavs.textContent = "";
 
   myPreferit.forEach((item) => {
-    const listFavs = create("li", "list-favs fst-italic with-hover");
-    const title = item.trackName;
-    listFavs.textContent = title;
-    sideFavs.append(listFavs);
+    if (item.trackId) {
+      const listFavs = create("li", "list-favs fst-italic with-hover");
+      listFavs.textContent = item.trackName;
+      listFavs.dataset.id = item.trackId; // salvo id nel li
+      sideFavs.append(listFavs);
+    } else if (item.collectionId) {
+      const listFavsAlbum = create(
+        "li",
+        "list-favs-album fst-italic with-hover",
+      );
+      listFavsAlbum.textContent = item.collectionName;
+      listFavsAlbum.dataset.id = item.collectionId;
+      sideAlbumFavs.append(listFavsAlbum);
+    }
+  });
+  if (sideFavs.children.length === 0) {
+    sideFavs.append(create("li", "list-favs fst-italic", "Ancora nessuno"));
+  }
+  if (sideAlbumFavs.children.length === 0) {
+    sideAlbumFavs.append(
+      create("li", "list-favs fst-italic", "Ancora nessun album"),
+    );
+  }
+}
+
+export function renderCardArtists(array, containerPadre) {
+  if (!containerPadre) return;
+  containerPadre.textContent = "";
+  array.forEach(async (item) => {
+    const myDivArtist = create("div", "card-personal");
+
+    /* div e img della foto, stesse classi delle altre card */
+    const myDivImg = create("div", "myDivImg ");
+    const myImg = create("img");
+    myImg.alt = item.artistName;
+    myDivImg.append(myImg);
+
+    const myTitleArtist = create("p", "myTitleArtist", item.artistName);
+    myDivArtist.append(myDivImg, myTitleArtist);
+    containerPadre.append(myDivArtist);
+
+    myDivArtist.addEventListener("click", () => {
+      window.location.href = `artist.html?id=${item.artistId}`;
+    });
+
+    /* la foto arriva dopo, quando risponde theaudiodb */
+    const foto = await artistImg(item.artistName);
+    if (foto) {
+      myImg.src = foto;
+    } else {
+      myDivImg.remove(); // nessuna foto, resta solo il nome
+    }
   });
 }
