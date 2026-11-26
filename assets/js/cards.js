@@ -158,29 +158,37 @@ export function renderAsideFavs() {
 export function renderCardArtists(array, containerPadre) {
   if (!containerPadre) return;
   containerPadre.textContent = "";
-  array.forEach(async (item) => {
-    const myDivArtist = create("div", "card-personal");
 
-    /* div e img della foto, stesse classi delle altre card */
-    const myDivImg = create("div", "myDivImg ");
+  array.forEach(async (item) => {
+    const myDivArtist = create("div", "artist-result-card");
+
+    /* CREAZIONE AVATAR */
+    const myDivImg = create("div", "artist-avatar");
     const myImg = create("img");
     myImg.alt = item.artistName;
+
+    /* INIZIALE DA MOSTRARE SE MANCA LA FOTO */
+    myDivImg.textContent = item.artistName.charAt(0).toUpperCase();
     myDivImg.append(myImg);
 
+    /* NOME ARTISTA */
     const myTitleArtist = create("p", "myTitleArtist", item.artistName);
+
     myDivArtist.append(myDivImg, myTitleArtist);
     containerPadre.append(myDivArtist);
 
+    /* APERTURA PAGINA ARTISTA */
     myDivArtist.addEventListener("click", () => {
       window.location.href = `artist.html?id=${item.artistId}`;
     });
 
-    /* la foto arriva dopo, quando risponde theaudiodb */
+    /* RECUPERO FOTO */
     const foto = await artistImg(item.artistName);
+
     if (foto) {
       myImg.src = foto;
-    } else {
-      myDivImg.remove(); // nessuna foto, resta solo il nome
+      myDivImg.classList.add("has-image");
+      myDivImg.firstChild.textContent = "";
     }
   });
 }

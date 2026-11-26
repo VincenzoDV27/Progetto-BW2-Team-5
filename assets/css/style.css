@@ -124,26 +124,6 @@ main {
   z-index: 1000;
 }
 
-/* PULSANTI NAVIGAZIONE */
-.nav-btn {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background-color: var(--button-bg);
-  color: var(--text-primary);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
-
-.nav-btn:hover {
-  background-color: var(--button-hover);
-}
-
-/* END */
-
 /* SEZIONE HOME */
 /* card brani */
 .card-personal {
@@ -561,6 +541,54 @@ main {
 #lastSearch:hover {
   color: #ffc107;
 }
+
+
+.artist-result-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.artist-result-card:hover {
+  background-color: #292929;
+}
+
+.artist-avatar {
+  width: 55px;
+  height: 55px;
+  min-width: 55px;
+  border-radius: 50%;
+  background-color: #383838;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.artist-avatar img {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artist-avatar.has-image img {
+  display: block;
+}
+
+.myTitleArtist {
+  margin: 0;
+  font-size: 16px;
+  color: white;
+}
+
 
 /* PAGINA ALBUM */
 
