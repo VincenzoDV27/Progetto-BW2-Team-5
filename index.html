@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module" src="assets/js/index.js"></script>
+  <script type="module" src="assets/js/sidebar.js"></script>
 </head>
 
 <body>
@@ -20,37 +21,38 @@
       <!-- SIDEBAR -->
       <aside class="sidebar col-md-1 col-lg-2 d-none d-md-flex flex-column overflow-auto p-1 p-lg-2">
         <a href="index.html"
-          class="d-flex align-items-center justify-content-cente justify-content-lg-start text-decoration-none text-white py-3 px-lg-2 mb-2">
+          class="d-flex align-items-center justify-content-center justify-content-lg-start text-decoration-none text-white py-3 px-lg-2 mb-2">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center">E</span>
-          <span class="brand-name d-none d-lg-inline ps-1">EpiTunes</span>
+<span class="brand-name ps-1">EpiTunes</span>
         </a>
 
         <nav class="sidebar-nav flex-column gap-1">
           <a href="index.html" class="side-link active mb-2">
-            <span class="icon">🏠</span><span class="d-none d-lg-inline">Home</span>
+            <span class="icon">🏠</span><span>Home</span>
           </a>
           <a href="search.html" class="side-link">
-            <span class="icon">🔍</span><span class="d-none d-lg-inline">Cerca</span>
+            <span class="icon">🔍</span><span>Cerca</span>
           </a>
         </nav>
         <!-- sezione preferiti -->
 
-        <p class="sidebar-section-title d-none d-lg-block mt-4 mb-2">
+        <p class="sidebar-section-title mt-4 mb-2">
           Brani preferiti
         </p>
-        <ul class="sidebar-list list-unstyled d-none d-lg-block" id="sidebar-favs"></ul>
-        <p class="sidebar-section-title d-none d-lg-block mt-4 mb-2">
+        <ul class="sidebar-list list-unstyled" id="sidebar-favs"></ul>
+        <p class="sidebar-section-title mt-4 mb-2">
           Album preferiti
         </p>
-        <ul class="sidebar-list list-unstyled d-none d-lg-block" id="sidebar-album-favs"></ul>
+        <ul class="sidebar-list list-unstyled" id="sidebar-album-favs"></ul>
       </aside>
+
       <main class="col overflow-auto">
         <!-- HEADER -->
         <header class="topbar sticky-top d-flex align-items-center justify-content-between px-4">
           <div class="topbar-nav d-flex align-items-center gap-2">
-            <div class="brand-mark d-md-none d-flex align-items-center justify-content-center">
-              E
-            </div>
+            <button class="btn-menu d-md-none" id="btn-menu" type="button" aria-label="Apri menu" aria-expanded="false">
+              <span class="material-symbols-rounded menu-hamburger">menu</span>
+            </button>
 
             <!-- SIMBOLI MOBILE ONLY (HOME-SEARCH) -->
             <a href="index.html" class="mobile-only btn d-md-none">
@@ -105,6 +107,7 @@
         </section>
       </main>
     </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <!-- PLAYER/FOOTER -->
     <footer class="player flex-shrink-0 d-flex align-items-center">
       <div class="row align-items-center w-100 g-0">

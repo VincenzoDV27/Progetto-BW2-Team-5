@@ -1,6 +1,9 @@
 import { getArtist } from "./api.js";
 import { player, updatePlayer } from "./player.js";
-import { myPreferit, savePreferit } from "./cards.js";
+import { myPreferit, savePreferit, renderAsideFavs } from "./cards.js";
+
+/* VISUALIZZAZIONE PREFERITI NELLA SIDEBAR */
+renderAsideFavs();
 
 const artistActions = document.querySelector("#artist-actions");
 

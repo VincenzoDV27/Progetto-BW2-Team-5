@@ -140,8 +140,15 @@ export function renderAsideFavs() {
         "li",
         "list-favs-album fst-italic with-hover",
       );
+
       listFavsAlbum.textContent = item.collectionName;
       listFavsAlbum.dataset.id = item.collectionId;
+
+      /* APERTURA PAGINA ALBUM */
+      listFavsAlbum.addEventListener("click", (e) => {
+        window.location.href = `album.html?id=${item.collectionId}`;
+      });
+
       sideAlbumFavs.append(listFavsAlbum);
     }
   });

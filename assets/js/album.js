@@ -1,6 +1,9 @@
 import { getAlbum } from "./api.js";
 import { player, updatePlayer } from "./player.js";
-import { myPreferit, savePreferit } from "./cards.js";
+import { myPreferit, savePreferit, renderAsideFavs } from "./cards.js";
+
+/* VISUALIZZAZIONE PREFERITI NELLA SIDEBAR */
+renderAsideFavs();
 
 // PULSANTE GIALLO RIPRODUZIONE ALBUM
 const albumActions = document.querySelector("#album-actions");
