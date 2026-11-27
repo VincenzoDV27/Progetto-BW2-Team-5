@@ -89,6 +89,12 @@
       "password": "$2a$10$6du2Sc6idYzQi6zWEBAD7.knaYUx2GHAbBKcejXjAxdR8/BNRpQA6",
       "userName": "dasda",
       "id": 15
+    },
+    {
+      "email": "pippo1@gmail.com",
+      "password": "$2a$10$L4Xt8Tk5VYamK4l4HDQa8etAk2GxAeA.ykdGox5P8JMeGgmUDJ/vK",
+      "userName": "Federico Semeraro",
+      "id": 16
     }
   ]
 }
