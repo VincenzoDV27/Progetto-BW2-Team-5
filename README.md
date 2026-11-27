@@ -1,7 +1,5 @@
 # EpiTunes
 
-![Home di EpiTunes](docs/index.png)
-
 🔗 **Demo online:** [EpiTunes su GitHub Pages](https://vincenzodv27.github.io/Progetto-BW2-Team-5/)
 
 Progetto della **Build Week 2 di EPICODE**, realizzato dal **Team 5** (23–27 novembre 2026).
@@ -13,14 +11,6 @@ Progetto della **Build Week 2 di EPICODE**, realizzato dal **Team 5** (23–27 n
 Progetto didattico che riproduce l'esperienza di una piattaforma di streaming musicale in stile Spotify, utilizzando i dati della [iTunes Search API](https://performance-partners.apple.com/search-api).
 
 > ℹ️ L'API di iTunes fornisce solo **anteprime audio di 30 secondi**: i brani riprodotti nell'app sono quindi delle preview, non le tracce complete.
-
----
-
-## 📸 Screenshot
-
-| Home                             | Cerca                                 |
-| -------------------------------- | ------------------------------------- |
-| ![Schermata Home](docs/home.png) | ![Schermata Ricerca](docs/search.png) |
 
 ---
 
@@ -117,7 +107,7 @@ git clone https://github.com/VincenzoDV27/Progetto-BW2-Team-5.git
 
 ## 📁 Struttura del progetto
 
-```
+````
 ├── index.html
 ├── search.html
 ├── album.html
@@ -127,24 +117,21 @@ git clone https://github.com/VincenzoDV27/Progetto-BW2-Team-5.git
 │   ├── login.js
 │   ├── register.html
 │   └── register.js
-├── assets/
-│   ├── css/
-│   │   ├── style.css
-│   │   └── auth.css
-│   └── js/
-│       ├── api.js
-│       ├── models.js
-│       ├── cards.js
-│       ├── player.js
-│       ├── sidebar.js
-│       ├── index.js
-│       ├── search.js
-│       ├── album.js
-│       └── artist.js
-└── docs/
-    ├── index.png
-    └── search.png
-```
+└─ assets/
+   ├── css/
+   │   ├── style.css
+   │   └── auth.css
+   └── js/
+       ├── api.js
+       ├── models.js
+       ├── cards.js
+       ├── player.js
+       ├── sidebar.js
+       ├── index.js
+       ├── search.js
+       ├── album.js
+       └── artist.js
+
 
 ### Le pagine HTML
 
@@ -179,7 +166,7 @@ Le 4 pagine principali condividono lo stesso contenitore `app`:
   </div>
   <div class="fullscreen-player" id="fullscreen-player"></div>
 </body>
-```
+````
 
 L'audio non è un tag `<audio>` nell'HTML: viene creato con `new Audio()` dentro la classe `Player`.
 
