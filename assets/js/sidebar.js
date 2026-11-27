@@ -44,3 +44,18 @@ sideFavs.addEventListener("click", (e) => {
     toggleSidebar();
   }
 });
+
+// FUNZIONE PER HEADER LOGOUT
+
+const logout = document.querySelector("#logout");
+
+if (logout) {
+  logout.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("loggedUser");
+
+    window.location.href = "./auth/login.html";
+  });
+}

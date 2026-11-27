@@ -11,6 +11,12 @@ const userName = document.querySelector("#userName");
 const userEmail = document.querySelector("#userEmail");
 const userPass = document.querySelector("#userPass");
 const regMessage = document.querySelector("#regMessage");
+const userRegister = document.querySelector("#userRegister");
+
+userRegister.addEventListener("click", function (e) {
+  e.preventDefault();
+  location.href = "login.html";
+});
 
 registerForm.addEventListener("submit", async function (e) {
   e.preventDefault();
@@ -26,7 +32,6 @@ registerForm.addEventListener("submit", async function (e) {
     );
     const data = await response.json();
     if (!response.ok) throw new Error(data);
-    registerForm.style.display = "none";
     regMessage.textContent =
       "Registrazione completata, reindirizzamento al login...";
     setTimeout(() => window.location.replace("login.html"), 1500);

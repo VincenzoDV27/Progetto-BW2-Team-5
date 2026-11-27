@@ -15,24 +15,24 @@
   <script type="module" src="assets/js/sidebar.js"></script>
   <!-- script che ci permette di iniziare da login -->
   <script>
-  if (!localStorage.getItem('accessToken')) {
-    location.replace('auth/login.html');
-  }
-</script>
+    if (!localStorage.getItem('accessToken')) {
+      location.replace('auth/login.html');
+    }
+  </script>
 </head>
 
 <body>
   <div class="app d-flex flex-column">
     <div class="app-body row g-0 flex-nowrap flex-grow-1 overflow-hidden">
       <!-- SIDEBAR -->
-      <aside class="sidebar col-md-1 col-lg-2 d-none d-md-flex flex-column overflow-auto p-1 p-lg-2">
+<aside class="sidebar col-md-3 col-lg-2 d-none d-md-flex flex-column overflow-auto p-2">
         <a href="index.html"
           class="d-flex align-items-center justify-content-center justify-content-lg-start text-decoration-none text-white py-3 px-lg-2 mb-2">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center">E</span>
-<span class="brand-name ps-1">EpiTunes</span>
+          <span class="brand-name ps-1">EpiTunes</span>
         </a>
 
-        <nav class="sidebar-nav flex-column gap-1">
+        <nav class="sidebar-nav d-flex flex-column gap-1">
           <a href="index.html" class="side-link active mb-2">
             <span class="icon">🏠</span><span>Home</span>
           </a>
@@ -70,9 +70,16 @@
             </a>
           </div>
           <!-- ICONA UTENTE -->
-          <div class="user-pill">
-            <i class="fa-solid fa-user"></i>
+
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-user"></i>
+            </button>
+            <ul class="dropdown-menu bg-dark ">
+              <li><a class="text-light dropdown-item" id="logout">Logout</a></li>
+            </ul>
           </div>
+
         </header>
 
         <!-- END -->

@@ -11,8 +11,6 @@ const albumActions = document.querySelector("#album-actions");
 /* RECUPERO PREFERITI DAL LOCALSTORAGE */
 const loadPref = JSON.parse(localStorage.getItem("myPreferit")) ?? [];
 
-myPreferit.push(...loadPref);
-
 /* RECUPERO ELEMENTI HTML */
 const albumCover = document.querySelector(".album-cover");
 const heroMeta = document.querySelector(".hero-meta");

@@ -4,6 +4,7 @@ const userPass = document.querySelector("#userPass");
 const userLogin = document.querySelector("#userLogin");
 const userRegister = document.querySelector("#userRegister");
 const loginError = document.querySelector("#loginError");
+const spinnerLog = document.querySelector("#spinnerLog");
 
 userRegister.addEventListener("click", function (e) {
   e.preventDefault();
@@ -11,6 +12,7 @@ userRegister.addEventListener("click", function (e) {
 });
 
 loginForm.addEventListener("submit", async function (e) {
+  spinnerLog.classList.remove("d-none");
   e.preventDefault();
   const loggedUser = {
     email: userEmail.value,
@@ -29,11 +31,12 @@ loginForm.addEventListener("submit", async function (e) {
     if (!response.ok) throw new Error("Email o password non corrette");
     localStorage.setItem("accessToken", data.accessToken);
     localStorage.setItem("loggedUser", JSON.stringify(data.user));
-    loginError.textContent = "Login corretto, accesso all'area riservata...";
+    loginError.textContent = "Login corretto, accesso al tuo profilo";
     setTimeout(() => {
       location.href = "../index.html";
     }, 3000);
   } catch (err) {
+    spinnerLog.classList.add("d-none");
     loginError.textContent = err.message;
     loginForm.reset();
   }

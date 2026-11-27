@@ -3,48 +3,73 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JavaScript asincrono 2</title>
+    <title>EpiTunes - Registrati</title>
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX"
-      crossorigin="anonymous"
     />
+
+    <link rel="stylesheet" href="../assets/css/auth.css" />
+
     <script type="module" src="./register.js"></script>
   </head>
+
   <body>
-    <h2>REGISTRATI</h2>
-    <div class="container d-flex justify-content-center">
-      <form>
-        <div class="row">
-          <div class="col-4">
-            <input
-              type="text"
-              id="userName"
-              class="form-control"
-              placeholder="Inserisci il nome completo"
-            />
-          </div>
-          <div class="col-4">
-            <input
-              type="email"
-              id="userEmail"
-              class="form-control"
-              placeholder="Inserisci l'email"
-            />
-          </div>
-          <div class="col-4">
-            <input
-              type="password"
-              id="userPass"
-              class="form-control"
-              placeholder="Scegli una password"
-            />
-          </div>
-          <button type="submit" class="btn btn-success w-25">REGISTRATI</button>
+    <main class="auth-container">
+      <div class="auth-card p-4 p-sm-5">
+        <div class="auth-brand mb-4 mb-sm-5">
+          <div class="auth-logo">E</div>
+          <span>EpiTunes</span>
         </div>
-      </form>
-    </div>
-    <h3 id="regMessage" class="text-center"></h3>
+
+        <div class="auth-heading">
+          <h1 class="fs-4">Crea il tuo account</h1>
+          <p>Registrati e inizia ad ascoltare la tua musica preferita.</p>
+        </div>
+
+        <form>
+          <div class="auth-fields">
+            <div class="auth-input-wrapper">
+              <input
+                type="text"
+                id="userName"
+                class="form-control"
+                placeholder="Inserisci il nome completo"
+              />
+            </div>
+
+            <div class="auth-input-wrapper">
+              <input
+                type="email"
+                id="userEmail"
+                class="form-control"
+                placeholder="Inserisci l'email"
+              />
+            </div>
+
+            <div class="auth-input-wrapper">
+              <input
+                type="password"
+                id="userPass"
+                class="form-control"
+                placeholder="Scegli una password"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-success auth-submit">
+              Registrati
+            </button>
+            <div class="auth-divider">oppure</div>
+
+            <button type="button" class="btn btn-info" id="userRegister">
+              Accedi
+            </button>
+          </div>
+        </form>
+
+        <h3 id="regMessage"></h3>
+      </div>
+    </main>
   </body>
 </html>

@@ -23,7 +23,11 @@ Progetto didattico che riproduce l'esperienza di una piattaforma di streaming mu
 - JavaScript Vanilla (ES Modules)
 - Bootstrap
 - iTunes Search API
+- JSON Server
+- JSON Server Auth
+- JSON
 - LocalStorage
+- TheAudioDB API (per renderizzare immagini artista)
 
 ### Scelte tecniche
 
@@ -38,7 +42,7 @@ Progetto didattico che riproduce l'esperienza di una piattaforma di streaming mu
 
 ### Funzionalità principali
 
-- [x] Layout con sidebar, contenuto centrale e player inferiore nelle 4 pagine.
+- [x] Layout con sidebar, contenuto centrale e player inferiore nelle 4 pagine principali.
 - [x] Navigazione tra le pagine.
 - [x] Classi OOP `Track`, `Album`, `Artist`, `Player`.
 - [x] Utilizzo della iTunes Search API.
@@ -57,6 +61,7 @@ Progetto didattico che riproduce l'esperienza di una piattaforma di streaming mu
 - [x] Gestione errori: messaggio di errore in caso di mancata risposta dell'API.
 - [x] Test dei limiti della ricerca sull'API.
 - [x] Layout responsive e pubblicazione su GitHub Pages.
+- [x] Autenticazione con registrazione e login (JSON Server Auth).
 
 ### Extra realizzati
 
@@ -65,8 +70,8 @@ Progetto didattico che riproduce l'esperienza di una piattaforma di streaming mu
 - [x] Pulsante play direttamente sulle card.
 - [x] "I brani che ti piacciono" raccolti in un unico array.
 - [x] Sezione "Album che ti piacciono".
-- [x] Interazione con ulteriore API per rendirizzare foto artisti.
-- [x] Se la foto non è presente anche nella seconda API vengono rendirizzate le maiuscole del nome dell'artista.
+- [x] Interazione con un'ulteriore API per mostrare le foto degli artisti.
+- [x] Se la foto non è presente neanche nella seconda API, vengono mostrate le iniziali del nome dell'artista.
 
 ---
 
@@ -87,11 +92,11 @@ git clone https://github.com/VincenzoDV27/Progetto-BW2-Team-5.git
 
 ## 📁 Struttura del progetto
 
-### Le 4 pagine HTML
+### Le pagine HTML
 
 #### Layout comune
 
-Tutte le pagine condividono lo stesso contenitore `app`:
+Le 4 pagine principali condividono lo stesso contenitore `app`:
 
 ```html
 <body>
@@ -184,9 +189,18 @@ Tutte le pagine condividono lo stesso contenitore `app`:
 - Informazioni sull'artista.
 - Top track.
 
+#### 🔐 [Login](login.html) e [Registrazione](register.html)
+
+Pagine di autenticazione con struttura propria, separata dal layout comune.
+
+- Form di login.
+- Form di registrazione di un nuovo utente.
+- Autenticazione gestita con JSON Server Auth.
+
 ### I file CSS
 
 - **[style.css](assets/css/style.css)**: stile globale dell'applicazione (colori, card, player).
+- **[auth.css](assets/css/auth.css)**: stile delle pagine di login e registrazione.
   | Home | Cerca |
   |------|-------|
   | ![Schermata Home](docs/index.png) | ![Schermata Ricerca](docs/search.png) |
@@ -203,6 +217,9 @@ La logica è organizzata in moduli ES, che esportano e importano le funzioni tra
 - **[player.js](assets/js/player.js)**: classe `Player` (play/pausa, barra di avanzamento, volume).
 - **[cards.js](assets/js/cards.js)**: funzioni helper per creare le card con `createElement`.
 - **[search.js](assets/js/search.js)**: ricerca sull'API con debounce di 400 ms ed event delegation sulle griglie.
+- **[siderbar.js](assets/js/sidebar.js)**: logica della funzionalità della sidebar.
+- **[login.js](assets/js/login.js)**: logica della pagina di login con JSON Server Auth.
+- **[register.js](assets/js/register.js)**: logica della pagina di registrazione di un nuovo utente.
 
 ---
 
@@ -239,16 +256,23 @@ La logica è organizzata in moduli ES, che esportano e importano le funzioni tra
 - Controlli per brano precedente e successivo, con passaggio automatico alla traccia seguente.
 - Cronologia dei brani salvata in LocalStorage e mostrata nella Home.
 - Aggiornamento della gestione del player e delle card musicali.
-- Interazione con ulteriore API per rendirizzare foto artisti.
-- Se la foto non è presente anche nella seconda API vengono rendirizzate le maiuscole del nome dell'artista.
+- Interazione con un'ulteriore API per mostrare le foto degli artisti.
+- Se la foto non è presente neanche nella seconda API, vengono mostrate le iniziali del nome dell'artista.
 
 ### v4.5
 
-- Riorganizzazione del codice JavaScript in moduli; miglioramento della gestione di brani, album e artisti; aggiornamento delle card musicali e degli artisti inclusa la visualizzazione degli artisti preferiti; ottimizzazione della gestione del player e della riproduzione casuale dei brani.
+- Riorganizzazione del codice JavaScript in moduli.
+- Miglioramento della gestione di brani, album e artisti.
+- Aggiornamento delle card musicali e degli artisti, con visualizzazione degli artisti preferiti.
+- Ottimizzazione della gestione del player e della riproduzione casuale dei brani.
 
 ### v4.6
 
 - Implementazione aside su mobile.
+
+### v5.0
+
+- Autenticazione con registrazione e login (pagine `login.html` e `register.html`, stile in `auth.css`).
 
 ---
 
@@ -284,8 +308,9 @@ La logica è organizzata in moduli ES, che esportano e importano le funzioni tra
 - Home con riprodotti di recente, preferiti e generi.
 - Gestione degli errori: input vuoto, nessun risultato, pulsante "riprova", API che non risponde.
 - Extra: filtri nella ricerca, modale a tutto schermo e pulsante play sulle card.
-- Interazione con ulteriore API per rendirizzare foto artisti.
-- Se la foto non è presente anche nella seconda API vengono rendirizzate le maiuscole del nome dell'artista.
+- Interazione con un'ulteriore API per mostrare le foto degli artisti.
+- Se la foto non è presente neanche nella seconda API, vengono mostrate le iniziali del nome dell'artista.
+- Autenticazione con registrazione e login.
 - Test dei limiti della ricerca sull'API.
 - Controllo del codice: niente `var`, `innerHTML` e `onclick`; console pulita.
 - Layout responsive e pubblicazione su GitHub Pages.

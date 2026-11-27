@@ -89,8 +89,20 @@
             </div>
 
             <!-- ICONA UTENTE -->
-            <div class="user-pill">
-              <i class="fa-solid fa-user"></i>
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-dark dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-user"></i>
+              </button>
+              <ul class="dropdown-menu bg-dark">
+                <li>
+                  <a class="text-light dropdown-item" id="logout">Logout</a>
+                </li>
+              </ul>
             </div>
           </header>
 

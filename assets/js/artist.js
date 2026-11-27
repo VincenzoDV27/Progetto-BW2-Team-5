@@ -134,7 +134,7 @@ const renderTopTracks = (tracks) => {
 
     // ASSEGNAZIONE CLASSE E ICONA
     btnPref.className = `btn ${isPref ? "btnPrefActive" : "btnPref"}`;
-    btnPref.textContent = isPref ? "★" : "♡";
+    btnPref.textContent = isPref ? "★" : "☆";
 
     // RECUPERO DURATA
     const minutes = Math.floor(track.trackTimeMillis / 60000);

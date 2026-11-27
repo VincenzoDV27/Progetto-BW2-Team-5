@@ -124,6 +124,13 @@ main {
   z-index: 1;
 }
 
+#logout:hover {
+  background-color: transparent;
+  color: #fff !important;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 
 /* MENU HAMBURGER */
 .btn-menu {
