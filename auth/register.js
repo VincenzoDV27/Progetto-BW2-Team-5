@@ -1,3 +1,4 @@
+/* modello del nuovo utente da inviare al server */
 class NewUser {
   constructor(_email, _password, _userName) {
     this.email = _email;
@@ -18,6 +19,7 @@ userRegister.addEventListener("click", function (e) {
   location.href = "login.html";
 });
 
+/* invia i dati di registrazione, se va a buon fine porta al login, altrimenti mostra l'errore */
 registerForm.addEventListener("submit", async function (e) {
   e.preventDefault();
   const newUser = new NewUser(userEmail.value, userPass.value, userName.value);
@@ -31,13 +33,15 @@ registerForm.addEventListener("submit", async function (e) {
       },
     );
     const data = await response.json();
-    if (!response.ok) throw new Error(data);
+    if (!response.ok)
+      throw new Error(
+        typeof data === "string" ? data : "Registrazione non riuscita",
+      );
     regMessage.textContent =
       "Registrazione completata, reindirizzamento al login...";
     setTimeout(() => window.location.replace("login.html"), 1500);
-    console.log(response.status, data);
   } catch (err) {
-    regMessage.textContent = err;
+    regMessage.textContent = err.message;
     registerForm.reset();
   }
 });

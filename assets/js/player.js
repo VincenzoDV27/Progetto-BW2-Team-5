@@ -1,5 +1,5 @@
-import { Player, Track } from "./models.js";
-import { imgClean, renderCard, myPreferit } from "./cards.js";
+import { Player } from "./models.js";
+import { imgClean, renderCard } from "./cards.js";
 
 /* CREAZIONE DEL PLAYER */
 export const player = new Player();
@@ -16,7 +16,6 @@ const btnPrevious = document.querySelector(
 const btnNext = document.querySelector(
   ".player-controls .btn-ctrl:nth-of-type(4)",
 );
-const sidebarFavs = document.querySelector("#sidebar-favs");
 const currentTime = document.querySelector(".current-time");
 const duration = document.querySelector(".duration");
 const progressFill = document.querySelector(".progress-fill");
@@ -109,11 +108,7 @@ function updatePlayIcon() {
 btnPlay.addEventListener("click", () => {
   if (!player.currentTrack) return;
 
-  if (player.isPlaying) {
-    player.pause();
-  } else {
-    player.play();
-  }
+  player.isPlaying ? player.pause() : player.play();
 
   updatePlayIcon();
 });
@@ -200,24 +195,27 @@ volumeControl.addEventListener("input", () => {
 
 export const myHistory = JSON.parse(localStorage.getItem("myHistory")) ?? [];
 
+/* aggiunge il brano in cima alla cronologia, senza doppioni, e la salva nel localstorage */
 export function addToHistory(track) {
   // niente doppioni: se c'è già, lo rimuovo e lo rimetto in testa
   const index = myHistory.findIndex((t) => t.trackId === track.trackId);
   if (index !== -1) myHistory.splice(index, 1);
 
   myHistory.unshift(track);
-  if (myHistory.length > 5) myHistory.pop(); // massimo 8
+  if (myHistory.length > 5) myHistory.pop(); // massimo 5
 
   localStorage.setItem("myHistory", JSON.stringify(myHistory));
   renderRecent();
 }
 
+/* mostra la cronologia nella griglia "riprodotti di recente", solo se la pagina la contiene */
 export function renderRecent() {
   const gridRecent = document.querySelector("#grid-recent");
   if (!gridRecent) return; // altre pagine
   renderCard(myHistory, gridRecent);
 }
 
+/* allinea l'icona play o pausa di tutte le card con lo stato del player */
 export function syncPlayBtn() {
   // ID DEL BRANO CARICATO NEL PLAYER
   const currentId = String(player.currentTrack?.trackId ?? "");
@@ -243,65 +241,24 @@ export function syncPlayBtn() {
       "aria-label",
       truePlay ? "Metti in pausa" : "Riproduci",
     );
-
-    // AGGIORNO LA CLASSE CSS
-    card.classList.toggle("is-plating", truePlay);
   });
 }
 //ad ogni cambio stato dell'audio
-player.audio.addEventListener(`play`, syncPlayBtn); //play
-player.audio.addEventListener(`pause`, syncPlayBtn); //pausa
-player.audio.addEventListener(`ended`, syncPlayBtn); //end
+player.audio.addEventListener("play", syncPlayBtn); //play
+player.audio.addEventListener("pause", syncPlayBtn); //pausa
+player.audio.addEventListener("ended", syncPlayBtn); //end
 
+/* se il brano è già caricato fa play o pausa, altrimenti lo carica e lo fa partire */
 export function playCard(track) {
   //il brano è caricato?
   // confronta l'id del brano cliccato con quello caricato.
   const currentPlay = player.currentTrack?.trackId === track.trackId;
-  console.log(
-    `playCard → currentPlay:`,
-    currentPlay,
-    `| paused`,
-    player.audio.paused,
-  );
   if (currentPlay) {
-    if (player.audio.paused) {
-      player.play();
-    } else {
-      player.audio.pause();
-    }
+    player.audio.paused ? player.play() : player.audio.pause();
     return;
   }
 
   player.select(track);
   updatePlayer(track);
   player.play();
-}
-
-//click su lista preferiti
-if (sidebarFavs) {
-  //evnt delegation
-  sidebarFavs.addEventListener("click", (e) => {
-    //risalgo al tag li
-    const li = e.target.closest("li[data-id]");
-    if (!li) {
-      return;
-    }
-    //cerco tra i preferiti
-    const item = myPreferit.find(
-      (element) => String(element.trackId) === li.dataset.id,
-    );
-    //se non lo trovo non fa nulla
-    if (!item.previewUrl) {
-      return;
-    }
-    // se è già caricato
-    if (player.currentTrack?.trackId === item.trackId) {
-      return;
-    }
-
-    //ricostruisco l'oggetto track
-    const track = new Track(item);
-    player.select(track);
-    updatePlayer(track);
-  });
 }

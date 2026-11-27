@@ -1,13 +1,12 @@
 /*>>>>>>>> MANUEL <<<<<<<<<<< */
-import { Track, Album, Artist, ArtistImg } from "./models.js";
+import { Track, Album, Artist } from "./models.js";
 
 export const API_BASE = "https://itunes.apple.com";
 
 export const API_SECOND =
   "https://www.theaudiodb.com/api/v1/json/123/search.php?s=";
 
-/* fetchJSON con try/catch */
-
+/* mostra sotto l'header un avviso di errore che sparisce dopo 4 secondi, il testo cambia in base allo status */
 const showApiError = (status) => {
   let errorMessage = document.querySelector("#api-error");
 
@@ -20,15 +19,24 @@ const showApiError = (status) => {
     if (status === 429) {
       errorMessage.textContent =
         "Hai effettuato troppe richieste. Attendi qualche secondo prima di riprovare.";
+    } else if (status >= 500) {
+      errorMessage.textContent =
+        "Il server non è momentaneamente disponibile. Riprova più tardi.";
     } else {
       errorMessage.textContent =
         "⚠️ Impossibile comunicare con l'API iTunes. Controlla la connessione e riprova.";
     }
 
     document.querySelector("header").after(errorMessage);
+
+    setTimeout(() => {
+      errorMessage.remove();
+    }, 4000);
   }
 };
 
+/* fetchJSON con try/catch */
+/* esegue la fetch e restituisce il json, in caso di errore mostra l'avviso e restituisce un risultato vuoto */
 export const fetchJSON = async (url) => {
   try {
     const response = await fetch(url);
@@ -89,6 +97,7 @@ export const getArtist = async (id) => {
   };
 };
 
+/* cerca la foto dell'artista su theaudiodb, se non la trova restituisce null */
 export const artistImg = async (name) => {
   try {
     const response = await fetch(API_SECOND + encodeURIComponent(name));

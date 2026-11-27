@@ -83,6 +83,12 @@
       "password": "$2a$10$dIa94mdwoHbVVaBxWY9pB.1XA8BLLcfPhft0IIPruu6FttWnEZq9G",
       "userName": "Nick",
       "id": 14
+    },
+    {
+      "email": "asdas@asdasd",
+      "password": "$2a$10$6du2Sc6idYzQi6zWEBAD7.knaYUx2GHAbBKcejXjAxdR8/BNRpQA6",
+      "userName": "dasda",
+      "id": 15
     }
   ]
 }

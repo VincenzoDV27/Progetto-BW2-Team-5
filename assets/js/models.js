@@ -30,6 +30,7 @@ export class Album {
   }
 }
 
+/* classe artista, tiene solo id, nome e genere */
 export class Artist {
   constructor(data) {
     this.artistId = data.artistId;
@@ -46,7 +47,6 @@ export class Player {
     this.isPlaying = false;
     this.volume = 1;
     this.audio = new Audio();
-    this.history = [];
 
     // CODA DI RIPRODUZIONE
     this.queue = [];
@@ -136,11 +136,5 @@ export class Player {
   seek(seconds) {
     if (!this.currentTrack) return;
     this.audio.currentTime = seconds;
-  }
-}
-
-export class ArtistImg {
-  constructor(data) {
-    this.strArtistThumb = data.strArtistThumb;
   }
 }

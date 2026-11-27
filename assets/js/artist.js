@@ -7,11 +7,6 @@ renderAsideFavs();
 
 const artistActions = document.querySelector("#artist-actions");
 
-/* RECUPERO PREFERITI DAL LOCALSTORAGE */
-const loadPref = JSON.parse(localStorage.getItem("myPreferit")) ?? [];
-
-myPreferit.push(...loadPref);
-
 /* RECUPERO ELEMENTI HTML */
 const artistCover = document.querySelector(".album-cover");
 const heroMeta = document.querySelector(".hero-meta");
@@ -22,13 +17,9 @@ const params = new URLSearchParams(window.location.search);
 const artistId = params.get("id");
 
 /* RECUPERO DATI ARTISTA */
-/* RECUPERO DATI ARTISTA */
 const loadArtist = async () => {
   try {
     const data = await getArtist(artistId);
-
-    console.log("ARTISTA:", data.artist);
-    console.log("TRACKS:", data.tracks);
 
     if (!data.artist) return;
 
@@ -154,11 +145,9 @@ const renderTopTracks = (tracks) => {
         (element) => element.trackId === track.trackId,
       );
 
-      if (indexPref !== -1) {
-        myPreferit.splice(indexPref, 1);
-      } else {
-        myPreferit.push(track);
-      }
+      indexPref !== -1
+        ? myPreferit.splice(indexPref, 1)
+        : myPreferit.push(track);
 
       // SALVATAGGIO PREFERITI
       savePreferit();
@@ -166,7 +155,7 @@ const renderTopTracks = (tracks) => {
       // AGGIORNAMENTO ICONA
       const isFavorite = indexPref === -1;
 
-      btnPref.textContent = isFavorite ? "★" : "♡";
+      btnPref.textContent = isFavorite ? "★" : "☆";
 
       btnPref.classList.toggle("btnPrefActive", isFavorite);
       btnPref.classList.toggle("btnPref", !isFavorite);

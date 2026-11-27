@@ -5,6 +5,7 @@ const btnMenu = document.querySelector("#btn-menu");
 const sidebar = document.querySelector(".sidebar");
 const sidebarOverlay = document.querySelector("#sidebar-overlay");
 
+/* apre o chiude la sidebar su mobile insieme all'overlay e cambia l'icona del menu */
 function toggleSidebar() {
   const isOpen = sidebar.classList.toggle("active");
 
@@ -15,13 +16,9 @@ function toggleSidebar() {
   btnMenu.querySelector("span").textContent = isOpen ? "close" : "menu";
 }
 
-btnMenu.addEventListener("click", (e) => {
-  toggleSidebar();
-});
+btnMenu.addEventListener("click", toggleSidebar);
 
-sidebarOverlay.addEventListener("click", (e) => {
-  toggleSidebar();
-});
+sidebarOverlay.addEventListener("click", toggleSidebar);
 
 /* RIPRODUZIONE BRANI PREFERITI DALLA SIDEBAR */
 const sideFavs = document.querySelector("#sidebar-favs");

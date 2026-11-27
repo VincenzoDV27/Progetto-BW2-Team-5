@@ -8,9 +8,6 @@ renderAsideFavs();
 // PULSANTE GIALLO RIPRODUZIONE ALBUM
 const albumActions = document.querySelector("#album-actions");
 
-/* RECUPERO PREFERITI DAL LOCALSTORAGE */
-const loadPref = JSON.parse(localStorage.getItem("myPreferit")) ?? [];
-
 /* RECUPERO ELEMENTI HTML */
 const albumCover = document.querySelector(".album-cover");
 const heroMeta = document.querySelector(".hero-meta");
@@ -24,9 +21,6 @@ const albumId = params.get("id");
 const loadAlbum = async () => {
   try {
     const data = await getAlbum(albumId);
-
-    console.log("ALBUM:", data.album);
-    console.log("TRACKS:", data.tracks);
 
     if (!data.album) return;
 
@@ -169,11 +163,9 @@ const renderTracklist = (tracks) => {
         (element) => element.trackId === track.trackId,
       );
 
-      if (indexPref !== -1) {
-        myPreferit.splice(indexPref, 1);
-      } else {
-        myPreferit.push(track);
-      }
+      indexPref !== -1
+        ? myPreferit.splice(indexPref, 1)
+        : myPreferit.push(track);
 
       // SALVATAGGIO PREFERITI
       savePreferit();

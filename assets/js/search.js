@@ -1,10 +1,8 @@
-import { fetchJSON } from "./api.js";
-import { Track, Album, Artist, Player } from "./models.js";
-import { myPreferit, renderCard, renderCardArtists } from "./cards.js";
+import { fetchJSON, API_BASE } from "./api.js";
+import { Track, Album, Artist } from "./models.js";
+import { renderCard, renderCardArtists, renderAsideFavs } from "./cards.js";
 import { player, updatePlayer, addToHistory, playCard } from "./player.js";
-import { renderAsideFavs } from "./cards.js";
 
-const API_BASE = "https://itunes.apple.com";
 const inputUser = document.querySelector("#search-input");
 const searchButton = document.querySelector("#search-button");
 const gridTracks = document.querySelector("#grid-tracks");
@@ -54,14 +52,14 @@ export const searchArtists = async (term, limit = 12) => {
 /* GESTIONE EVENTI PAGINA SEARCH */
 let timerSearch;
 
-function gestisciRicerca(e) {
+/* parte con il click sul bottone o con invio, salva il termine, avvia la ricerca e svuota l'input */
+function manageResearch(e) {
   if (e.type === "click" || e.key === "Enter") {
     e.preventDefault();
 
     const term = inputUser.value.trim();
 
     if (!term) return;
-
     saveSearch(term);
     searchAll(term);
     inputUser.blur(); // fa partire il salvataggio finché il testo c'è ancora
@@ -69,8 +67,8 @@ function gestisciRicerca(e) {
   }
 }
 
-searchButton.addEventListener("click", gestisciRicerca);
-inputUser.addEventListener("keydown", gestisciRicerca);
+searchButton.addEventListener("click", manageResearch);
+inputUser.addEventListener("keydown", manageResearch);
 
 inputUser.addEventListener("input", () => {
   clearTimeout(timerSearch);
@@ -108,6 +106,7 @@ function saveSearch(term) {
   showLastSearch();
 }
 
+/* mostra l'ultima ricerca salvata, se non ce ne sono nasconde il box */
 function showLastSearch() {
   const ricerche = JSON.parse(localStorage.getItem(KEY_SEARCH)) || [];
 
@@ -186,6 +185,7 @@ searchFilters.addEventListener("click", (e) => {
 
 showFilters(); //al caricamento della pagina mette i filtri
 
+/* cerca in parallelo brani, album e artisti, poi mostra i risultati e applica il filtro attivo */
 const searchAll = async (term) => {
   mySections.forEach((spinner) => (spinner.hidden = false));
   setLoading(true);
@@ -220,7 +220,7 @@ const searchAll = async (term) => {
 };
 
 // EVENT DELEGATION sula griglia dei brani
-gridTracks.addEventListener(`click`, (e) => {
+gridTracks.addEventListener("click", (e) => {
   // ESCLUDO IL CLICK SUI PREFERITI
   if (e.target.closest(".btnPref, .btnPrefActive")) return;
 
@@ -248,6 +248,7 @@ gridTracks.addEventListener(`click`, (e) => {
   }
 });
 
+/* svuota le griglie, nasconde le sezioni e azzera i risultati della ricerca */
 function clearSearch() {
   clearTimeout(timerSearch); // annulla una ricerca che stava per partire
   setLoading(false);
@@ -269,10 +270,12 @@ function clearSearch() {
   tracksFound = [];
 }
 
+/* svuota il campo di ricerca */
 function clearInputUser() {
   inputUser.value = "";
 }
 
+/* "riprova" pulisce tutto e rimette il cursore nel campo di ricerca */
 retryButton.addEventListener("click", () => {
   inputUser.value = "";
   clearSearch();

@@ -3,6 +3,7 @@ import { artistImg } from "./api.js";
 export const myPreferit = JSON.parse(localStorage.getItem("myPreferit")) ?? [];
 export const gridFavorites = document.querySelector("#grid-favorites");
 
+/* crea un elemento html con classi e testo opzionali */
 export function create(tag, classes, texts) {
   const element = document.createElement(tag);
   if (classes) element.className = classes;
@@ -10,6 +11,7 @@ export function create(tag, classes, texts) {
   return element;
 }
 
+/* crea una card per ogni brano o album dell'array e la inserisce nel contenitore */
 export function renderCard(array, containerPadre) {
   if (!containerPadre) return;
   containerPadre.textContent = "";
@@ -20,16 +22,9 @@ export function renderCard(array, containerPadre) {
     //DIV CONTENENTE TUTTA LA CARD
     const myDivCard = create("div", "card-personal");
     myDivCard.dataset.id = item.trackId ?? item.collectionId ?? item.artistId;
-    if (item.artistId && !item.trackId && !item.collectionId) {
-      myDivCard.classList.add("artist-card");
-    }
-    if (item.collectionId && !item.trackId) {
-      //COLLEGAMENTO ALLA PAGINA ALBUM
-      myDivCard.classList.add("album-card");
-    }
     //DIV DELL IMG DELLA CANZONE
     const myDivImg = create("div", "myDivImg"); //AGGIUNGERE CLASSI E CONTENUTO
-    // myDivImg.classList.add('')
+    // myDivImg.classList.add("")
     const myImg = create("img"); //AGGIUNGERE CLASSI E CONTENUTO
     myImg.src = imgClean(item.artworkUrl100, 600);
 
@@ -61,7 +56,6 @@ export function renderCard(array, containerPadre) {
     );
 
     btnPref.addEventListener("click", (e) => {
-      if (!containerPadre) return;
       e.preventDefault();
       const index = myPreferit.findIndex(
         (element) => (element.trackId ?? element.collectionId) === id,
@@ -82,7 +76,6 @@ export function renderCard(array, containerPadre) {
       });
 
       renderCard(myPreferit, gridFavorites);
-      renderAsideFavs();
     });
 
     myDivTitle.append(mytitle, myArtist, btnPref);
@@ -97,32 +90,26 @@ export function renderCard(array, containerPadre) {
       });
     }
 
-    /* APERTURA PAGINA ARTISTA */
-    if (item.artistId && !item.trackId && !item.collectionId) {
-      myDivCard.addEventListener("click", (e) => {
-        if (e.target.closest(".btnPref, .btnPrefActive")) return;
-
-        window.location.href = `artist.html?id=${item.artistId}`;
-      });
-    }
-
     containerPadre.append(myDivCard);
   });
 }
 
+/* salva i preferiti nel localstorage e aggiorna la sidebar */
 export function savePreferit() {
   localStorage.setItem("myPreferit", JSON.stringify(myPreferit));
   renderAsideFavs();
 }
 
+/* sostituisce nell'url della copertina la misura 100x100 con quella richiesta */
 export function imgClean(url, size = 600) {
   if (!url) return "";
   return url.replace(/\d+x\d+bb/, `${size}x${size}bb`);
 }
 
+/* mostra nella sidebar i brani e gli album preferiti, divisi nelle due liste */
 export function renderAsideFavs() {
   //intercetto la lista
-  const sideFavs = document.querySelector(`#sidebar-favs`);
+  const sideFavs = document.querySelector("#sidebar-favs");
   const sideAlbumFavs = document.querySelector("#sidebar-album-favs");
 
   //svuoto la lista
@@ -145,7 +132,7 @@ export function renderAsideFavs() {
       listFavsAlbum.dataset.id = item.collectionId;
 
       /* APERTURA PAGINA ALBUM */
-      listFavsAlbum.addEventListener("click", (e) => {
+      listFavsAlbum.addEventListener("click", () => {
         window.location.href = `album.html?id=${item.collectionId}`;
       });
 
@@ -162,6 +149,7 @@ export function renderAsideFavs() {
   }
 }
 
+/* crea le card degli artisti con l'iniziale, poi carica la foto quando arriva */
 export function renderCardArtists(array, containerPadre) {
   if (!containerPadre) return;
   containerPadre.textContent = "";

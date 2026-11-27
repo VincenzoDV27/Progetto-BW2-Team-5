@@ -23,7 +23,6 @@ const home = document.querySelector(".home");
 // const myHistory = JSON.parse(localStorage.getItem("myHistory")) ?? [];
 renderRecent();
 
-let tracks = [];
 let popTracks = [];
 let rockTracks = [];
 renderAsideFavs();
@@ -34,30 +33,21 @@ renderCard(myPreferit, gridFavorites);
 
 const BASE_URL = `${API_BASE}` + "/search?entity=song&limit=8&term=";
 
+/* carica in parallelo i brani pop e rock e li mostra nelle due griglie */
 const loadSuggestions = async () => {
-  try {
-    const [pop, rock] = await Promise.allSettled([
-      fetchJSON(BASE_URL + "pop"),
-      fetchJSON(BASE_URL + "rock"),
-    ]);
+  const [pop, rock] = await Promise.allSettled([
+    fetchJSON(BASE_URL + "pop"),
+    fetchJSON(BASE_URL + "rock"),
+  ]);
 
-    if (pop.status === "fulfilled") {
-      popTracks = pop.value.results;
-      tracks.push(...popTracks);
-      renderCard(popTracks, gridPop);
-    }
+  if (pop.status === "fulfilled") {
+    popTracks = pop.value.results;
+    renderCard(popTracks, gridPop);
+  }
 
-    if (rock.status === "fulfilled") {
-      rockTracks = rock.value.results;
-      tracks.push(...rockTracks);
-      renderCard(rockTracks, gridRock);
-    }
-  } catch {
-    //se non funziona
-    const errore = await fetchJSON(
-      "https://itunes.apple.com/pagina-che-non-esiste",
-    );
-    console.log("risposta con errore:", errore);
+  if (rock.status === "fulfilled") {
+    rockTracks = rock.value.results;
+    renderCard(rockTracks, gridRock);
   }
 };
 loadSuggestions();

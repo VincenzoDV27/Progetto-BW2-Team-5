@@ -1,7 +1,6 @@
 const loginForm = document.querySelector("form");
 const userEmail = document.querySelector("#userEmail");
 const userPass = document.querySelector("#userPass");
-const userLogin = document.querySelector("#userLogin");
 const userRegister = document.querySelector("#userRegister");
 const loginError = document.querySelector("#loginError");
 const spinnerLog = document.querySelector("#spinnerLog");
@@ -11,6 +10,7 @@ userRegister.addEventListener("click", function (e) {
   location.href = "register.html";
 });
 
+/* invia email e password al server, se sono corrette salva token e utente e porta alla home */
 loginForm.addEventListener("submit", async function (e) {
   spinnerLog.classList.remove("d-none");
   e.preventDefault();
